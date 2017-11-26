@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bytemechanics</groupId>
+        <artifactId>bytemechanics-maven</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>fluent-logger</artifactId>
+    <packaging>jar</packaging>
+	<version>1.0.0</version>
+    <name>Fluent Logger</name>
+	<description>Simple logging abstraction with standard java logging system</description>
+	<url>http://www.bytemechanics.org</url>
+	<developers>
+		<developer>
+			<name>Albert Farré Figueras</name>
+			<email>afarre@gmail.com</email>
+			<url>https://www.linkedin.com/in/albert-farré-figueras-4348aa2</url>
+			<roles>
+				<role>Developer</role>
+				<role>Product owner</role>
+			</roles>
+			<timezone>GMT+1</timezone>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>http://opensource.org/licenses/Apache-2.0</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>Byte Mechanics</name>
+		<url>http://www.bytemechanics.org</url>
+	</organization>
+	<scm>
+		<connection>https://github.com/bytemechanics/fluent-logger.git</connection>
+		<url>https://github.com/bytemechanics/fluent-logger</url>
+	</scm>
+
+</project>
