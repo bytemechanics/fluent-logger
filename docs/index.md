@@ -20,7 +20,7 @@ dependencies {
     compile 'org.bytemechanics:fluent-logger:X.X.X'
 }
 ```
-2. Get logger instance
+1. Get logger instance
 ```Java
 package mypackage;
 import org.bytemechanics.fluentlogger.FluentLogger;
@@ -28,7 +28,7 @@ public class MyClass{
 	private static final FluentLogger logger=FluentLogger.getLogger(MyClass.class);
 }
 ```
-3. Write a log
+1. Write a log
 ```Java
 logger.trace("myMessage {} with {}","param1",2,exception);
 ```
