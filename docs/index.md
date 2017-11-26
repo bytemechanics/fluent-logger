@@ -6,7 +6,7 @@ Simplify parameter replacement in logging messages in order to avoid message pro
 
 ## Quick start
 1. First of all include the Jar file in your compile and execution classpath.
-### Maven
+**Maven**
 ```Maven
 	<dependency>
 		<groupId>org.bytemechanics</groupId>
@@ -14,7 +14,7 @@ Simplify parameter replacement in logging messages in order to avoid message pro
 		<version>X.X.X</version>
 	</dependency>
 ```
-### Graddle
+**Graddle**
 ```Gradle
 dependencies {
     compile 'org.bytemechanics:fluent-logger:X.X.X'
