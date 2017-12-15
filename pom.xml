@@ -8,7 +8,7 @@
     </parent>
     <artifactId>fluent-logger</artifactId>
     <packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
     <name>Fluent Logger</name>
 	<description>Simple logging abstraction with standard java logging system</description>
 	<url>http://www.bytemechanics.org</url>
