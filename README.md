@@ -1,4 +1,7 @@
 # Fluent Logger
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.bytemechanics%3Afluent-logger)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
+[![Coverage](https://sonarcloud.io/api/badges/measure?key=org.bytemechanics%3Afluent-logger&metric=coverage)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
+
 Simple logging abstraction with standard java logging system
 
 ## Motivation
