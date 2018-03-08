@@ -4,11 +4,11 @@
     <parent>
         <groupId>org.bytemechanics</groupId>
         <artifactId>bytemechanics-maven</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.4</version>
     </parent>
     <artifactId>fluent-logger</artifactId>
     <packaging>jar</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
     <name>Fluent Logger</name>
 	<description>Simple logging abstraction with standard java logging system</description>
 	<url>http://www.bytemechanics.org</url>
@@ -39,4 +39,32 @@
 		<url>https://github.com/bytemechanics/fluent-logger</url>
 	</scm>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.bytemechanics.maven</groupId>
+				<artifactId>copysource-maven-plugin</artifactId>
+				<version>0.1.0-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>copy-classes</goal>
+						</goals>
+						<configuration>
+							<copies>
+								<copy>
+									<artifact>${project.groupId}:copy-commons:1.2.0</artifact>
+									<classes>
+										<class>org.bytemechanics.commons.string.SimpleFormat</class>
+									</classes>
+									<fromPackage>org.bytemechanics.commons</fromPackage>
+									<toPackage>org.bytemechanics.fluentlogger.internal.commons</toPackage>
+								</copy>
+							</copies>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
