@@ -169,6 +169,13 @@ public class FluentLogger{
 	public FluentLogger error(final String _message, final Object... _args) {
 		return log(Level.SEVERE, _message, _args);
 	}
+	
+	public FluentLogger severe(final Throwable _exception) {
+		return severe("", _exception);
+	}
+	public FluentLogger severe(final String _message, final Object... _args) {
+		return log(Level.SEVERE, _message, _args);
+	}
 
 	protected Logger getUnderlayingLogger(){
 		return this.logger;

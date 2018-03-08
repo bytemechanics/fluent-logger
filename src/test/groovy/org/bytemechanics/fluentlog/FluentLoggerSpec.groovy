@@ -435,5 +435,63 @@ class FluentLoggerSpec extends Specification{
 			"myPrefix {} with {}:"	| [1,"b"]		| "myMessage {} with {}"	| [2,"c"]		| "myPrefix 1 with b:myMessage 2 with c"
 			
 	}
+
+	
+	@Unroll
+	def "Log severe #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log severe $exception should log the $prefix message at finest level with the same exception with $message")
+
+		when:
+			def FluentLogger logStream=FluentLogger.getLogger("severe.logger",(String)prefix)
+			logStream.getUnderlayingLogger().setLevel(Level.SEVERE)
+			logStream.severe(exception)
+			
+		then:
+			def LogRecord logRecord=this.logsHandler.getRecords().poll()
+			logRecord!=null
+			logRecord.getLevel()==Level.SEVERE
+			if(message==null){
+				logRecord.getMessage()==null
+			}else{
+				logRecord.getMessage()==message
+			}
+			logRecord.getThrown()==exception
+			
+		where:
+			exception									| prefix		| message
+			new Exception("finest")						| null			| null
+			new Exception("finest2")					| "test-prefix"	| "test-prefix"
+			new NullPointerException("finest3")			| null			| null
+			new NullPointerException("finest4")			| "test-prefix"	| "test-prefix"
+	}
+
+	@Unroll
+	def "Log severe #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log severe $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
+
+		when:
+			def FluentLogger logStream=FluentLogger.getLogger("severe.logger",(String)prefix,(Object[])prefixArgs)
+			logStream.getUnderlayingLogger().setLevel(Level.SEVERE)
+			logStream.severe(message,(Object[])messageArgs)
+			
+		then:
+			def LogRecord logRecord=this.logsHandler.getRecords().poll()
+			logRecord!=null
+			logRecord.getLevel()==Level.SEVERE
+			logRecord.getMessage()==resultMessage
+			
+		where:
+			prefix					| prefixArgs	| message					| messageArgs	| resultMessage
+			null					| []			| null						| []			| ""
+			null					| []			| "myMessage"				| []			| "myMessage"
+			null					| []			| "myMessage {} with {}"	| [2,"c"]		| "myMessage 2 with c"
+			"myPrefix:"				| []			| null						| []			| "myPrefix:"
+			"myPrefix:"				| []			| "myMessage"				| []			| "myPrefix:myMessage"
+			"myPrefix:"				| []			| "myMessage {} with {}"	| [2,"c"]		| "myPrefix:myMessage 2 with c"
+			"myPrefix {} with {}:"	| [1,"b"]		| null						| []			| "myPrefix 1 with b:"
+			"myPrefix {} with {}:"	| [1,"b"]		| "myMessage"				| []			| "myPrefix 1 with b:myMessage"
+			"myPrefix {} with {}:"	| [1,"b"]		| "myMessage {} with {}"	| [2,"c"]		| "myPrefix 1 with b:myMessage 2 with c"
+			
+	}
 }
 
