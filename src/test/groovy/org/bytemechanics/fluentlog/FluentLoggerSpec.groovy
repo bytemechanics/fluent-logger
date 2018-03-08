@@ -16,6 +16,8 @@ class FluentLoggerSpec extends Specification{
 	
 	
 	def setup(){
+		println(">>>>> FluentLoggerSpec >>>> setup")
+
 		this.logsHandler=new LogHandlerMock()
 		logsHandler.setLevel(Level.FINEST)
 		System.setProperty("java.util.logging.SimpleFormatter.format","%1\$tY-%1\$tm-%1\$td %1\$tH:%1\$tM:%1\$tS %4\$s %5\$s%6\$s%n")
@@ -23,11 +25,15 @@ class FluentLoggerSpec extends Specification{
 		Logger.getLogger("").setLevel(Level.SEVERE)
 	}
 	def cleanup(){
+		println(">>>>> FluentLoggerSpec >>>> cleanup")
+	
 		this.logsHandler=null;
 	}
 
 	
 	def "Helper getLogger with null must raise a nullPointerException"(){
+		println(">>>>> FluentLoggerSpec >>>> Helper getLogger with null must raise a nullPointerException")
+
 		when:
 			FluentLogger.getLogger((Logger)null)
 			
@@ -37,6 +43,8 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Helper getLogger with #name must instantiate underlaying logger with the #loggerName name without prefix"(){
+		println(">>>>> FluentLoggerSpec >>>> Helper getLogger with $name must instantiate underlaying logger with the $loggerName name without prefix")
+
 		setup:
 			def FluentLogger logStream
 			
@@ -57,7 +65,9 @@ class FluentLoggerSpec extends Specification{
 	}
 	
 	@Unroll
-	def "Helper getLogger Constructor with #name and #prefix with args #args must instantiate underlaying logger with the #loggerName name and prefix #loggerPrefix"(){
+	def "Helper getLogger Constructor with #name and #prefix with args #args must instantiate underlaying logger with the #loggerName name and prefix #prefix and #args"(){
+		println(">>>>> FluentLoggerSpec >>>> Helper getLogger Constructor with $name and $prefix with args $args must instantiate underlaying logger with the $loggerName name and prefix $prefix and $args")
+
 		setup:
 			def FluentLogger logStream
 			
@@ -69,20 +79,23 @@ class FluentLoggerSpec extends Specification{
 			logStream.getUnderlayingLogger()!=null
 			logStream.getUnderlayingLogger().getName().equals(loggerName)
 			logStream.getPrefix().isPresent()==true
-			logStream.getPrefix().get().equals(loggerPrefix)
+			logStream.getPrefix().get().equals(prefix)
+			logStream.getArguments().isPresent()==true
+			logStream.getArguments().get().equals(args)
 			
 		where:
-			name										| prefix				| args		| loggerName				| loggerPrefix
-			Class.class									| "myPrefix"			| []		| Class.class.getName()		| "myPrefix"
-			Class.class									| "myPrefix {} with {}"	| [1,"b"]	| Class.class.getName()		| "myPrefix 1 with b"
-			"string"									| "myPrefix"			| []		| "string"					| "myPrefix"
-			"string"									| "myPrefix {} with {}"	| [1,"b"]	| "string"					| "myPrefix 1 with b"
-			Logger.getLogger("javaUtilLoggingLogger")	| "myPrefix"			| []		| "javaUtilLoggingLogger"	| "myPrefix"
-			Logger.getLogger("javaUtilLoggingLogger")	| "myPrefix {} with {}"	| [1,"b"]	| "javaUtilLoggingLogger"	| "myPrefix 1 with b"
+			name										| prefix				| args		| loggerName					
+			Class.class									| "myPrefix"			| []		| Class.class.getName()			
+			Class.class									| "myPrefix {} with {}"	| [1,"b"]	| Class.class.getName()			
+			"string"									| "myPrefix"			| []		| "string"						
+			"string"									| "myPrefix {} with {}"	| [1,"b"]	| "string"						
+			Logger.getLogger("javaUtilLoggingLogger")	| "myPrefix"			| []		| "javaUtilLoggingLogger"		
+			Logger.getLogger("javaUtilLoggingLogger")	| "myPrefix {} with {}"	| [1,"b"]	| "javaUtilLoggingLogger"		
 	}
 
 	@Unroll
 	def "Log finest #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log finest #exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("finest.logger",(String)prefix)
@@ -110,6 +123,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log finest #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log finest $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("finest.logger",(String)prefix,(Object[])prefixArgs)
@@ -138,6 +152,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log trace #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log trace $exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("trace.logger",(String)prefix)
@@ -165,6 +180,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log trace #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log trace $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("trace.logger",(String)prefix,(Object[])prefixArgs)
@@ -193,6 +209,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log debug #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log debug $exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("debug.logger",(String)prefix)
@@ -220,6 +237,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log debug #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log debug $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("debug.logger",(String)prefix,(Object[])prefixArgs)
@@ -248,6 +266,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log info #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log info $exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("info.logger",(String)prefix)
@@ -275,6 +294,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log info #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log info $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("info.logger",(String)prefix,(Object[])prefixArgs)
@@ -303,6 +323,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log warning #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log warning $exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("warning.logger",(String)prefix)
@@ -330,6 +351,7 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log warning #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log warning $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("warning.logger",(String)prefix,(Object[])prefixArgs)
@@ -359,6 +381,7 @@ class FluentLoggerSpec extends Specification{
 	
 	@Unroll
 	def "Log error #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log error $exception should log the $prefix message at finest level with the same exception with $message")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("error.logger",(String)prefix)
@@ -386,11 +409,70 @@ class FluentLoggerSpec extends Specification{
 
 	@Unroll
 	def "Log error #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log error $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
 
 		when:
 			def FluentLogger logStream=FluentLogger.getLogger("error.logger",(String)prefix,(Object[])prefixArgs)
 			logStream.getUnderlayingLogger().setLevel(Level.SEVERE)
 			logStream.error(message,(Object[])messageArgs)
+			
+		then:
+			def LogRecord logRecord=this.logsHandler.getRecords().poll()
+			logRecord!=null
+			logRecord.getLevel()==Level.SEVERE
+			logRecord.getMessage()==resultMessage
+			
+		where:
+			prefix					| prefixArgs	| message					| messageArgs	| resultMessage
+			null					| []			| null						| []			| ""
+			null					| []			| "myMessage"				| []			| "myMessage"
+			null					| []			| "myMessage {} with {}"	| [2,"c"]		| "myMessage 2 with c"
+			"myPrefix:"				| []			| null						| []			| "myPrefix:"
+			"myPrefix:"				| []			| "myMessage"				| []			| "myPrefix:myMessage"
+			"myPrefix:"				| []			| "myMessage {} with {}"	| [2,"c"]		| "myPrefix:myMessage 2 with c"
+			"myPrefix {} with {}:"	| [1,"b"]		| null						| []			| "myPrefix 1 with b:"
+			"myPrefix {} with {}:"	| [1,"b"]		| "myMessage"				| []			| "myPrefix 1 with b:myMessage"
+			"myPrefix {} with {}:"	| [1,"b"]		| "myMessage {} with {}"	| [2,"c"]		| "myPrefix 1 with b:myMessage 2 with c"
+			
+	}
+
+	
+	@Unroll
+	def "Log severe #exception should log the #prefix message at finest level with the same exception with #message"(){
+		println(">>>>> FluentLoggerSpec >>>> Log severe $exception should log the $prefix message at finest level with the same exception with $message")
+
+		when:
+			def FluentLogger logStream=FluentLogger.getLogger("severe.logger",(String)prefix)
+			logStream.getUnderlayingLogger().setLevel(Level.SEVERE)
+			logStream.severe(exception)
+			
+		then:
+			def LogRecord logRecord=this.logsHandler.getRecords().poll()
+			logRecord!=null
+			logRecord.getLevel()==Level.SEVERE
+			if(message==null){
+				logRecord.getMessage()==null
+			}else{
+				logRecord.getMessage()==message
+			}
+			logRecord.getThrown()==exception
+			
+		where:
+			exception									| prefix		| message
+			new Exception("finest")						| null			| null
+			new Exception("finest2")					| "test-prefix"	| "test-prefix"
+			new NullPointerException("finest3")			| null			| null
+			new NullPointerException("finest4")			| "test-prefix"	| "test-prefix"
+	}
+
+	@Unroll
+	def "Log severe #message with #messageArgs should log the given message with replaced args #resultMessage concatenated with #prefix with #prefixArgs replaced"(){
+		println(">>>>> FluentLoggerSpec >>>> Log severe $message with $messageArgs should log the given message with replaced args $resultMessage concatenated with $prefix with $prefixArgs replaced")
+
+		when:
+			def FluentLogger logStream=FluentLogger.getLogger("severe.logger",(String)prefix,(Object[])prefixArgs)
+			logStream.getUnderlayingLogger().setLevel(Level.SEVERE)
+			logStream.severe(message,(Object[])messageArgs)
 			
 		then:
 			def LogRecord logRecord=this.logsHandler.getRecords().poll()
