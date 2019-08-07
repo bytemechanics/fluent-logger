@@ -4,67 +4,87 @@
     <parent>
         <groupId>org.bytemechanics</groupId>
         <artifactId>bytemechanics-maven</artifactId>
-        <version>1.0.4</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>fluent-logger</artifactId>
     <packaging>jar</packaging>
-	<version>1.1.0</version>
+    <version>2.0.0</version>
     <name>Fluent Logger</name>
-	<description>Simple logging abstraction with standard java logging system</description>
-	<url>http://www.bytemechanics.org</url>
-	<developers>
-		<developer>
-			<name>Albert Farré Figueras</name>
-			<email>afarre@gmail.com</email>
-			<url>https://www.linkedin.com/in/albert-farré-figueras-4348aa2</url>
-			<roles>
-				<role>Developer</role>
-				<role>Product owner</role>
-			</roles>
-			<timezone>GMT+1</timezone>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>Apache License 2.0</name>
-			<url>http://opensource.org/licenses/Apache-2.0</url>
-		</license>
-	</licenses>
-	<organization>
-		<name>Byte Mechanics</name>
-		<url>http://www.bytemechanics.org</url>
-	</organization>
-	<scm>
-		<connection>https://github.com/bytemechanics/fluent-logger.git</connection>
-		<url>https://github.com/bytemechanics/fluent-logger</url>
-	</scm>
+    <description>Simple logging abstraction with standard java logging system</description>
+    <url>http://www.bytemechanics.org</url>
+    <organization>
+        <name>Byte Mechanics</name>
+        <url>http://www.bytemechanics.org</url>
+    </organization>
+    
+    <developers>
+        <developer>
+            <name>Albert Farré Figueras</name>
+            <email>afarre@gmail.com</email>
+            <url>https://www.linkedin.com/in/albert-farré-figueras-4348aa2</url>
+            <roles>
+                <role>Developer</role>
+                <role>Product owner</role>
+            </roles>
+            <timezone>GMT+1</timezone>
+        </developer>
+    </developers>
+    
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://opensource.org/licenses/Apache-2.0</url>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>https://github.com/bytemechanics/fluent-logger.git</connection>
+        <url>https://github.com/bytemechanics/fluent-logger</url>
+    </scm>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.bytemechanics.maven</groupId>
-				<artifactId>copysource-maven-plugin</artifactId>
-				<version>0.1.0-SNAPSHOT</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>copy-classes</goal>
-						</goals>
-						<configuration>
-							<copies>
-								<copy>
-									<artifact>${project.groupId}:copy-commons:1.2.0</artifact>
-									<classes>
-										<class>org.bytemechanics.commons.string.SimpleFormat</class>
-									</classes>
-									<fromPackage>org.bytemechanics.commons</fromPackage>
-									<toPackage>org.bytemechanics.fluentlogger.internal.commons</toPackage>
-								</copy>
-							</copies>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>provided</scope>
+			<optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.12.0</version>
+            <scope>provided</scope>
+			<optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.bytemechanics.maven</groupId>
+                <artifactId>copysource-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-classes</goal>
+                        </goals>
+                        <configuration>
+                            <copies>
+                                <copy>
+                                    <artifact>${project.groupId}:copy-commons:1.2.0</artifact>
+                                    <classes>
+                                        <class>org.bytemechanics.commons.string.SimpleFormat</class>
+                                    </classes>
+                                    <fromPackage>org.bytemechanics.commons</fromPackage>
+                                    <toPackage>org.bytemechanics.fluentlogger.internal.commons</toPackage>
+                                </copy>
+                            </copies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
