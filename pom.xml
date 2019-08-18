@@ -76,6 +76,7 @@
                                     <artifact>${project.groupId}:copy-commons:1.2.0</artifact>
                                     <classes>
                                         <class>org.bytemechanics.commons.string.SimpleFormat</class>
+                                        <class>org.bytemechanics.commons.functional.LambdaUnchecker</class>
                                     </classes>
                                     <fromPackage>org.bytemechanics.commons</fromPackage>
                                     <toPackage>org.bytemechanics.fluentlogger.internal.commons</toPackage>
