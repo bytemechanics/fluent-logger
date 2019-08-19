@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.fluentlogger;
+package org.bytemechanics.logger.internal;
+
+import org.bytemechanics.logger.Level;
 
 /**
- * Log levels
+ * Logger adapter
  * @author afarre
  */
-public enum Level {
+public interface LoggerAdapter {
     
-    FINEST(0),
-    TRACE(1),
-    DEBUG(2),
-    INFO(3),
-    WARNING(4),
-    ERROR(5),
-    CRITICAL(6)
-    ;
-    
-    public final int index;
-    
-    Level(final int _index){
-        this.index=_index;
-    }
+    public boolean isEnabled(final Level _level);
+    public default boolean isEnabled(final LogBean _log){
+		return this.isEnabled(_log.getLevel());
+	}
+	
+    public void log(final LogBean _log);
 }

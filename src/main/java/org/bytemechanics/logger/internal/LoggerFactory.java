@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.fluentlogger.internal;
+package org.bytemechanics.logger.internal;
 
 import java.lang.reflect.Constructor;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.exceptions.NoLoggingAPIPresent;
 import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
+import org.bytemechanics.logger.internal.impl.LoggerConsoleImpl;
 
 /**
  * Factory to instantiate Loggers
@@ -42,7 +42,7 @@ public enum LoggerFactory {
 																		.map(LambdaUnchecker.uncheckedFunction(LoggerFactory::getConstructor))
 																		.map(LoggerFactory::buidFactory)
 																		.findFirst()
-																			.orElseThrow(NoLoggingAPIPresent::new);
+																			.orElse(LoggerFactory.consoleLogger());
 	
 	private final String targetClass;
 	private final String implementation;
@@ -73,6 +73,11 @@ public enum LoggerFactory {
 	}
 	public static Function<String,LoggerAdapter> buidFactory(final Constructor<? extends LoggerAdapter> _constructor){
 		return LambdaUnchecker.uncheckedFunction(loggerName -> _constructor.newInstance(loggerName));
+	}
+	public static Function<String,LoggerAdapter> consoleLogger(){
+		System.out.println("[WARNING] FluentLogger: No logging API present in classpath: Log4j, Log4j2 or Logging api not found, all logging INFO or greater priority will be printed into console\n"
+							+ "\tIf you want to remove this message or print into file, please import into your classpath  Log4j, Log4j2 or Logging api");
+		return LoggerConsoleImpl::new;
 	}
 		
 	public static LoggerAdapter getLogger(final String _name){

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.fluentlogger.internal.impl;
+package org.bytemechanics.logger.internal.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bytemechanics.fluentlogger.internal.beans.LogBean;
-import org.bytemechanics.fluentlogger.internal.LoggerAdapter;
+import org.bytemechanics.logger.internal.LogBean;
+import org.bytemechanics.logger.internal.LoggerAdapter;
 
 /**
  *
@@ -38,7 +38,7 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 
 	
 	@Override
-	public boolean isEnabled(org.bytemechanics.fluentlogger.Level _level) {
+	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
 		return this.internalLogger.isLoggable(LEVEL_TRANSLATION[_level.index]);
 	}
 	@Override

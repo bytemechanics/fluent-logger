@@ -13,15 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.fluentlogger.exceptions;
+package org.bytemechanics.logger;
 
 /**
- *
+ * Log levels
  * @author afarre
  */
-public class NoLoggingAPIPresent extends Error{
-
-	public NoLoggingAPIPresent() {
-		super("No logging API present in classpath: Log4j, Log4j2 or Logging api not found");
-	}	
+public enum Level {
+    
+    FINEST(0),
+    TRACE(1),
+    DEBUG(2),
+    INFO(3),
+    WARNING(4),
+    ERROR(5),
+    CRITICAL(6)
+    ;
+    
+    public final int index;
+    
+    Level(final int _index){
+        this.index=_index;
+    }
 }

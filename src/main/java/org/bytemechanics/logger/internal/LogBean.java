@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.fluentlogger.internal.beans;
+package org.bytemechanics.logger.internal;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.bytemechanics.fluentlogger.Level;
+import org.bytemechanics.logger.Level;
 import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 
 /**
