@@ -15,6 +15,9 @@
  */
 package org.bytemechanics.logger.internal.impl;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bytemechanics.logger.internal.LogBean;
@@ -27,6 +30,8 @@ import org.bytemechanics.logger.internal.LoggerAdapter;
 public class LoggerLog4jImpl implements LoggerAdapter {
 
 	private static final Level[] LEVEL_TRANSLATION = {Level.TRACE, Level.DEBUG, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
+	private static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(LoggerLog4jImpl.class.getName(),org.apache.logging.log4j.Logger.class.getName())
+																	.collect(Collectors.toSet());
 
 	
 	private final Logger internalLogger;
@@ -43,7 +48,8 @@ public class LoggerLog4jImpl implements LoggerAdapter {
 	}
 	@Override
 	public void log(final LogBean _log) {
-		this.internalLogger.log(_log.getSourceClass()
+		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
+		this.internalLogger.log(stack.getClassName()
 								,LEVEL_TRANSLATION[_log.getLevel().index]
 								,_log.getMessage().get()
 								,_log.getStacktrace()

@@ -15,10 +15,7 @@
  */
 package org.bytemechanics.logger;
 
-import java.util.Arrays;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
+import org.bytemechanics.fluentlogger.internal.commons.lang.ArrayUtils;
 import org.bytemechanics.logger.internal.LogBean;
 import org.bytemechanics.logger.internal.LoggerAdapter;
 import org.bytemechanics.logger.internal.LoggerFactory;
@@ -43,19 +40,19 @@ public final class FluentLogger {
 
 	/**
      * Get NEW fluent logger instance with the given name, adds the _prefix to any message
-     * @param _prefix prefix to append at the beggining of any message writen to this log and after any previous prefix at this logger
+     * @param _prefix prefix to append at the begining of any message writen to this log and after any previous prefix at this logger
      * @return fluent logger instance
      */
     public FluentLogger prefixed(final String _prefix){
 		return new FluentLogger(this.loggerAdapter,this.prefix+_prefix,this.args);
 	}
 	/**
-     * Get NEW fluent logger instance from class cannonincal name, adds the _prefix to any message using the _initialArgs as first replacement parameters
+     * Get NEW fluent logger instance from class canonincal name, adds the _prefix to any message using the _initialArgs as first replacement parameters
      * @param _initialArgs replacement values to add as placeholders for any message written, is appended at the end of any other arguments at this logger
      * @return fluent logger instance
      */
     public FluentLogger with(final Object... _initialArgs){
-		return new FluentLogger(this.loggerAdapter,this.prefix,concat(this.args,_initialArgs));
+		return new FluentLogger(this.loggerAdapter,this.prefix,ArrayUtils.concat(this.args,_initialArgs));
 	}
 
 	
@@ -64,6 +61,16 @@ public final class FluentLogger {
 			this.loggerAdapter.log(_log);
 		}
         return this;
+    }
+	
+	public FluentLogger log(final Level _level,final String _message, final Object... _args) {
+
+		if(this.loggerAdapter.isEnabled(_level)){
+			this.loggerAdapter.log(LogBean.of(_level)
+												.message(prefix).args(this.args)
+												.message(_message).args(_args));
+		}
+		return this;
     }
 	
 	
@@ -77,19 +84,68 @@ public final class FluentLogger {
 		return new FluentLogger(LoggerFactory.getLogger(_name),"");
 	}
 	/**
-     * Get NEW fluent logger instance from class cannonincal name
+     * Get NEW fluent logger instance from class canonincal name
      * @param _class from extract the logger instance
      * @return fluent logger instance
      */
     public static final FluentLogger of(final Class<?> _class){
 		return new FluentLogger(LoggerFactory.getLogger(_class.getName()),"");
 	}
+	
+	
+	public FluentLogger finest(final Throwable _exception) {
+        return finest("", _exception);
+    }
 
-	private static Object[] concat(final Object[] _arg1,final Object[] _arg2) {
+    public FluentLogger finest(final String _message, final Object... _args) {
+        return log(Level.FINEST,null, _message, _args);
+    }
 
-        final Object[] reply = Arrays.copyOf(_arg1, _arg1.length + _arg2.length);
-        System.arraycopy(_arg2, 0, reply, _arg1.length, _arg2.length);
+    public FluentLogger trace(final Throwable _exception) {
+        return trace("", _exception);
+    }
 
-        return reply;
+    public FluentLogger trace(final String _message, final Object... _args) {
+        return log(Level.TRACE,null, _message, _args);
+    }
+
+    public FluentLogger debug(final Throwable _exception) {
+        return debug("", _exception);
+    }
+
+    public FluentLogger debug(final String _message, final Object... _args) {
+        return log(Level.DEBUG,null, _message, _args);
+    }
+
+    public FluentLogger info(final Throwable _exception) {
+        return info("", _exception);
+    }
+
+    public FluentLogger info(final String _message, final Object... _args) {
+        return log(Level.INFO,null, _message, _args);
+    }
+
+    public FluentLogger warning(final Throwable _exception) {
+        return warning("", _exception);
+    }
+
+    public FluentLogger warning(final String _message, final Object... _args) {
+        return log(Level.WARNING,null, _message, _args);
+    }
+
+    public FluentLogger error(final Throwable _exception) {
+        return error("", _exception);
+    }
+
+    public FluentLogger error(final String _message, final Object... _args) {
+        return log(Level.ERROR,null, _message, _args);
+    }
+
+    public FluentLogger critical(final Throwable _exception) {
+        return critical("", _exception);
+    }
+
+    public FluentLogger critical(final String _message, final Object... _args) {
+        return log(Level.CRITICAL,null, _message, _args);
     }
 }

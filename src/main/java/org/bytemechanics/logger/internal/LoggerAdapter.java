@@ -15,6 +15,8 @@
  */
 package org.bytemechanics.logger.internal;
 
+import java.util.Set;
+import java.util.function.Supplier;
 import org.bytemechanics.logger.Level;
 
 /**
@@ -28,5 +30,5 @@ public interface LoggerAdapter {
 		return this.isEnabled(_log.getLevel());
 	}
 	
-    public void log(final LogBean _log);
+    public void log(final LogBean _logBean);
 }

@@ -73,9 +73,10 @@
                         <configuration>
                             <copies>
                                 <copy>
-                                    <artifact>${project.groupId}:copy-commons:1.2.0</artifact>
+                                    <artifact>${project.groupId}:copy-commons:1.4.0-SNAPSHOT</artifact>
                                     <classes>
                                         <class>org.bytemechanics.commons.string.SimpleFormat</class>
+                                        <class>org.bytemechanics.commons.lang.ArrayUtils</class>
                                         <class>org.bytemechanics.commons.functional.LambdaUnchecker</class>
                                     </classes>
                                     <fromPackage>org.bytemechanics.commons</fromPackage>

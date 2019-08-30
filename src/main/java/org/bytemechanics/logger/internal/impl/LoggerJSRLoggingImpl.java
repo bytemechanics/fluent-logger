@@ -15,8 +15,11 @@
  */
 package org.bytemechanics.logger.internal.impl;
 
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bytemechanics.logger.internal.LogBean;
 import org.bytemechanics.logger.internal.LoggerAdapter;
 
@@ -27,6 +30,8 @@ import org.bytemechanics.logger.internal.LoggerAdapter;
 public class LoggerJSRLoggingImpl implements LoggerAdapter {
 
 	private static final Level[] LEVEL_TRANSLATION = {Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE, Level.SEVERE};
+	private static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(LoggerJSRLoggingImpl.class.getName())
+																	.collect(Collectors.toSet());
 
 	
 	private final Logger internalLogger;
@@ -43,9 +48,10 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 	}
 	@Override
 	public void log(final LogBean _log) {
+		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
 		this.internalLogger.logp(LEVEL_TRANSLATION[_log.getLevel().index],
-									_log.getSourceClass(),
-									_log.getSourceMethod(),
+									stack.getClassName(),
+									stack.getMethodName(),
 									_log.getStacktrace()
 										   .orElse(null),
 									_log.getMessage());
