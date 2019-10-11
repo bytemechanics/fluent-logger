@@ -15,6 +15,7 @@
  */
 package org.bytemechanics.logger.internal.impl;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,26 +35,32 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 																	.collect(Collectors.toSet());
 
 	
+	@SuppressWarnings("NonConstantLogger")
 	private final Logger internalLogger;
 
 	
 	public LoggerJSRLoggingImpl(final String _logName) {
-		this.internalLogger = Logger.getLogger(_logName);
+		this(Logger.getLogger(_logName));
+	}
+	public LoggerJSRLoggingImpl(final Logger _logger) {
+		this.internalLogger = _logger;
 	}
 
+	protected Level translateLevel(org.bytemechanics.logger.Level _level){
+		return LEVEL_TRANSLATION[_level.index];
+	}
 	
 	@Override
 	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
-		return this.internalLogger.isLoggable(LEVEL_TRANSLATION[_level.index]);
+		return Optional.of(_level)
+						.map(this::translateLevel)
+						.map(this.internalLogger::isLoggable)
+						.orElse(false);
 	}
 	@Override
 	public void log(final LogBean _log) {
 		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
-		this.internalLogger.logp(LEVEL_TRANSLATION[_log.getLevel().index],
-									stack.getClassName(),
-									stack.getMethodName(),
-									_log.getStacktrace()
-										   .orElse(null),
-									_log.getMessage());
+		final Level level=translateLevel(_log.getLevel());
+		this.internalLogger.logp(level,stack.getClassName(),stack.getMethodName(),_log.getStacktrace().orElse(null),_log.getMessage());
 	}
 }

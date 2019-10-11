@@ -15,11 +15,10 @@
  */
 package org.bytemechanics.logger.internal.impl;
 
-import java.time.LocalDateTime;
+import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.LogBean;
 import org.bytemechanics.logger.internal.LoggerAdapter;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 
 /**
  *
@@ -37,6 +36,9 @@ public class LoggerConsoleImpl implements LoggerAdapter {
 		this.logName = _logName;
 	}
 
+	protected String getMessage(final LogBean _log){
+		return SimpleFormat.format(PATTERN,_log.getTime(),_log.getLevel().name(),this.logName,_log.getMessage().get());
+	}
 	
 	@Override
 	public boolean isEnabled(final Level _level) {
@@ -46,7 +48,7 @@ public class LoggerConsoleImpl implements LoggerAdapter {
 	@Override
 	public void log(final LogBean _log) {
 		
-		final String message=SimpleFormat.format(PATTERN,LocalDateTime.now(),_log.getLevel().name(),this.logName,_log.getMessage().get());
+		final String message=getMessage(_log);
 		
 		switch (_log.getLevel()) {
 			case CRITICAL:

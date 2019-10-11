@@ -19,6 +19,9 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.spi.AbstractLogger;
+import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
+import org.bytemechanics.fluentlogger.FluentLogger;
 import org.bytemechanics.logger.internal.LogBean;
 import org.bytemechanics.logger.internal.LoggerAdapter;
 
@@ -26,19 +29,15 @@ import org.bytemechanics.logger.internal.LoggerAdapter;
  *
  * @author afarre
  */
-public class LoggerLog4j2Impl implements LoggerAdapter {
+public class LoggerLog4j2Extension extends ExtendedLoggerWrapper implements LoggerAdapter {
 
 	private static final Level[] LEVEL_TRANSLATION = {Level.TRACE, Level.DEBUG, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
-	
-	private final Logger internalLogger;
-
-	
-	public LoggerLog4j2Impl(final String _logName) {
+	public LoggerLog4j2Extension(final String _logName) {
 		this(LogManager.getLogger(_logName));
 	}
-	public LoggerLog4j2Impl(final Logger _logger) {
-		this.internalLogger = _logger;
+	public LoggerLog4j2Extension(final Logger _logger) {
+		super((AbstractLogger) _logger, _logger.getName(),_logger.getMessageFactory());
 	}
 
 	protected Level translateLevel(org.bytemechanics.logger.Level _level){
@@ -49,12 +48,12 @@ public class LoggerLog4j2Impl implements LoggerAdapter {
 	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
 		return Optional.of(_level)
 						.map(this::translateLevel)
-						.map(this.internalLogger::isEnabled)
+						.map(this::isEnabled)
 						.orElse(false);
 	}
 	@Override
 	public void log(final LogBean _log) {
 		final Level level=translateLevel(_log.getLevel());
-		this.internalLogger.log(level,_log.getMessage(),_log.getStacktrace().orElse(null));
+		logIfEnabled(FluentLogger.class.getName(),level,null,_log.getMessage(),_log.getStacktrace().orElse(null));
 	}
 }

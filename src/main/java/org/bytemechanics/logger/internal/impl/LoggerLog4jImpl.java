@@ -15,6 +15,7 @@
  */
 package org.bytemechanics.logger.internal.impl;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,21 +39,27 @@ public class LoggerLog4jImpl implements LoggerAdapter {
 
 	
 	public LoggerLog4jImpl(final String _logName) {
-		this.internalLogger = Logger.getLogger(_logName);
+		this(Logger.getLogger(_logName));
+	}
+	public LoggerLog4jImpl(final Logger _logger) {
+		this.internalLogger = _logger;
 	}
 
-	
+	protected Level translateLevel(org.bytemechanics.logger.Level _level){
+		return LEVEL_TRANSLATION[_level.index];
+	}
+
 	@Override
 	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
-		return this.internalLogger.isEnabledFor(LEVEL_TRANSLATION[_level.index]);
+		return Optional.of(_level)
+						.map(this::translateLevel)
+						.map(this.internalLogger::isEnabledFor)
+						.orElse(false);
 	}
 	@Override
 	public void log(final LogBean _log) {
 		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
-		this.internalLogger.log(stack.getClassName()
-								,LEVEL_TRANSLATION[_log.getLevel().index]
-								,_log.getMessage().get()
-								,_log.getStacktrace()
-										.orElse(null));
+		final Level level=translateLevel(_log.getLevel());
+		this.internalLogger.log(stack.getClassName(),level,_log.getMessage().get(),_log.getStacktrace().orElse(null));
 	}
 }
