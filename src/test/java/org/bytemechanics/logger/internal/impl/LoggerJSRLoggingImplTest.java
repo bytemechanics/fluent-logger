@@ -46,15 +46,11 @@ public class LoggerJSRLoggingImplTest {
 	@BeforeAll
 	public static void setup() throws IOException{
 		System.out.println(">>>>> LoggerJSRLoggingImplTest >>>> setupSpec");
-		final InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties");
-		try{
+		try(InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties")){
 			LogManager.getLogManager().readConfiguration(inputStream);
 		}catch (final IOException e){
 			Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
 			Logger.getAnonymousLogger().severe(e.getMessage());
-		}finally{
-			if(inputStream!=null)
-				inputStream.close();
 		}
 	}
 	@BeforeEach
@@ -133,7 +129,7 @@ public class LoggerJSRLoggingImplTest {
 
 		final java.util.logging.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		new Expectations() {{
-			underlayingLogger.logp(translatedLevel,"org.bytemechanics.logger.internal.impl.LoggerJSRConsoleImplTest","testLog", _log.getStacktrace().orElse(null),(Supplier<String>)any); 
+			underlayingLogger.logp(translatedLevel,"org.bytemechanics.logger.internal.impl.LoggerJSRConsoleImplTest","testLog", _log.getStacktrace().orElse(null),(Supplier)any); 
 				times=1;
 		}};
 		logger.log(_log);

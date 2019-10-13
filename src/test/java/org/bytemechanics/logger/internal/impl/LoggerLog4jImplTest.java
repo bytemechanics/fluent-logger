@@ -46,15 +46,11 @@ public class LoggerLog4jImplTest {
 	@BeforeAll
 	public static void setup() throws IOException{
 		System.out.println(">>>>> LoggerLog4jImplTest >>>> setupSpec");
-		final InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties");
-		try{
+		try(InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties")){
 			LogManager.getLogManager().readConfiguration(inputStream);
 		}catch (final IOException e){
 			Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
 			Logger.getAnonymousLogger().severe(e.getMessage());
-		}finally{
-			if(inputStream!=null)
-				inputStream.close();
 		}
 	}
 	@BeforeEach

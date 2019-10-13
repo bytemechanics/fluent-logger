@@ -15,34 +15,20 @@
  */
 package org.bytemechanics.logger.internal;
 
-import java.lang.reflect.Constructor;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
-import org.bytemechanics.logger.internal.impl.LoggerConsoleImpl;
 
 /**
  * Factory to instantiate Loggers
  * @author afarre
  */
-public enum LoggerFactory {
+public enum LoggerFactory implements ReflectionLoaderStrategy{
 	
 	LOG4J("org.apache.log4j.Logger","org.bytemechanics.fluentlogger.internal.impl.LoggerLog4jImpl"),
 	LOG4J2("org.apache.logging.log4j.Logger","org.bytemechanics.fluentlogger.internal.impl.LoggerLog4j2Impl"),
 	JSR("java.util.logging.Logger","org.bytemechanics.fluentlogger.internal.impl.LoggerJSRLoggingImpl"),
 	;
 
-	private static final Function<String,LoggerAdapter> factory=Stream.of(LoggerFactory.values())
-																		.sequential()
-																		.filter(LoggerFactory::isAPIPresent)
-																		.map(LambdaUnchecker.uncheckedFunction(LoggerFactory::getImplementation))
-																		.map(LambdaUnchecker.uncheckedFunction(LoggerFactory::getConstructor))
-																		.map(LoggerFactory::buidFactory)
-																		.findFirst()
-																			.orElse(LoggerFactory.consoleLogger());
+	private static final Function<String,LoggerAdapter> factory=ReflectionLoaderStrategy.getFactory(LoggerFactory.class);
 	
 	private final String targetClass;
 	private final String implementation;
@@ -52,34 +38,16 @@ public enum LoggerFactory {
 		this.implementation=_implementation;
 	}
 	
-	public boolean isAPIPresent(){
-		
-		boolean reply=false;
-		
-		try {
-			reply=(Class.forName(targetClass)!=null);
-		} catch (ClassNotFoundException|LinkageError ex) {
-			//We do nothing because we are detecting if the class exist
-			Logger.getLogger(LoggerFactory.class.getName()).log(Level.FINEST,ex, () -> SimpleFormat.format("API class {} for {} not found!", targetClass,name()));
-		}
-		
-		return reply;
+	@Override
+	public String getTargetClassName(){
+		return this.targetClass;
 	}
-	public Class<? extends LoggerAdapter> getImplementation() throws ClassNotFoundException{
-		return (Class<? extends LoggerAdapter>) Class.forName(implementation);
+	@Override
+	public String getImplementationClassName(){
+		return this.implementation;
 	}
-	public static Constructor<? extends LoggerAdapter> getConstructor(final Class<? extends LoggerAdapter> _adapter) throws NoSuchMethodException{
-		return _adapter.getConstructor(String.class);
-	}
-	public static Function<String,LoggerAdapter> buidFactory(final Constructor<? extends LoggerAdapter> _constructor){
-		return LambdaUnchecker.uncheckedFunction(loggerName -> _constructor.newInstance(loggerName));
-	}
-	public static Function<String,LoggerAdapter> consoleLogger(){
-		System.out.println("[WARNING] FluentLogger: No logging API present in classpath: Log4j, Log4j2 or Logging api not found, all logging INFO or greater priority will be printed into console\n"
-							+ "\tIf you want to remove this message or print into file, please import into your classpath  Log4j, Log4j2 or Logging api");
-		return LoggerConsoleImpl::new;
-	}
-		
+	
+	
 	public static LoggerAdapter getLogger(final String _name){
 		return LoggerFactory.factory.apply(_name);
 	}
