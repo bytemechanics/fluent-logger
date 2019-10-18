@@ -200,6 +200,8 @@ public class LogBean {
 			return false;
 		}else if(this.args == null && other.args != null){
 			return false;
+		}else if(this.args == null && other.args == null){
+			return true;
 		}else{
 			Object[] objects1=this.args.stream()
 											.reduce(ArrayUtils::concat)
