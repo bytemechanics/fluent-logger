@@ -26,7 +26,7 @@ import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
  * Standard java logging API implementation
- * @see https://docs.oracle.com/javase/7/docs/technotes/guides/logging/index.html
+ * @see <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/logging/index.html">https://docs.oracle.com/javase/7/docs/technotes/guides/logging/index.html</a>
  * @author afarre
  * @since 2.0.0
  */

@@ -26,7 +26,7 @@ import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
  * Logger adapter Log4j implementation
- * @see https://logging.apache.org/log4j/1.2/
+ * @see <a href="https://logging.apache.org/log4j/1.2/">https://logging.apache.org/log4j/1.2/</a>
  * @author afarre
  * @since 2.0.0
  */

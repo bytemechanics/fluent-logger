@@ -172,7 +172,7 @@ public class LogBean {
 		hash = 41 * hash + Objects.hashCode(this.time);
 		return hash;
 	}
-	/**@see Object#equals()  */
+	/**@see Object#equals(java.lang.Object) */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
