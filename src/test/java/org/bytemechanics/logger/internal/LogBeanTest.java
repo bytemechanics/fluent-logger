@@ -72,7 +72,7 @@ public class LogBeanTest {
 		Assertions.assertEquals(time,bean.getTime());
 		Assertions.assertEquals("org.bytemechanics.logger.internal.LogBeanTest",bean.getSource().getClassName());
 		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
-		Assertions.assertEquals(throwable,bean.getStacktrace().get());
+		Assertions.assertEquals(throwable,bean.getThrowable().get());
 	}
 	
 	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown", "AssertEqualsBetweenInconvertibleTypes"})
@@ -91,7 +91,7 @@ public class LogBeanTest {
 		Assertions.assertEquals(time,bean.getTime());
 		Assertions.assertEquals("org.bytemechanics.logger.internal.LogBeanTest",bean.getSource().getClassName());
 		Assertions.assertEquals("testBuilderNoStacktrace",bean.getSource().getMethodName());
-		Assertions.assertEquals(Optional.empty(),bean.getStacktrace());
+		Assertions.assertEquals(Optional.empty(),bean.getThrowable());
 	}	
 	
 	@Test
@@ -145,6 +145,26 @@ public class LogBeanTest {
 		Assertions.assertEquals("unknown",stacktrace.getMethodName());
 		Assertions.assertEquals("unknown",stacktrace.getFileName());
 		Assertions.assertEquals(0,stacktrace.getLineNumber());
+	}
+
+	@Test
+	public void testEquals2() throws InterruptedException{
+		
+		final LocalDateTime time=LocalDateTime.now();
+		Thread.sleep(2);
+		final String prefix="prefix({},{},{},{},{}):::";
+		final Object[] prefixArguments=new Object[]{null,"myparg2",2,3,5};
+		final String message="my-message({},{},{},{})";
+		final Object[] messageArguments=new Object[]{"myparg1",null,"myparg2",2,3,5};
+
+		final LogBean logBean1=LogBean.of(Level.TRACE).time(time)
+										.message(prefix).args(prefixArguments)
+										.message(message).args(messageArguments);
+		final LogBean logBean2=LogBean.of(Level.TRACE).time(time)
+										.message(prefix).args(prefixArguments)
+										.message(message).args(messageArguments);
+		
+		Assertions.assertEquals(logBean1,logBean2);
 	}
 	
 	@Test

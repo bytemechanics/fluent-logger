@@ -69,6 +69,6 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 	public void log(final LogBean _log) {
 		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
 		final Level level=translateLevel(_log.getLevel());
-		this.internalLogger.logp(level,stack.getClassName(),stack.getMethodName(),_log.getStacktrace().orElse(null),_log.getMessage());
+		this.internalLogger.logp(level,stack.getClassName(),stack.getMethodName(),_log.getThrowable().orElse(null),_log.getMessage());
 	}
 }

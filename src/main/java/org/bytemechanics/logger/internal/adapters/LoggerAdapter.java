@@ -34,13 +34,13 @@ public interface LoggerAdapter {
 	/**
 	 * Check if an specific _level is enabled
 	 * @param _level fluent logger level
-	 * @return true if level is enabled in the underlaying API
+	 * @return true if level is enabled in the underlying API
 	 */
     public boolean isEnabled(final Level _level);
 	/**
 	 * Check if the given _log would be printed if logged
 	 * @param _log log message to check
-	 * @return true if this _log level is enabledin the underlaying API
+	 * @return true if this _log level is enabled in the underlying API
 	 * @see LoggerAdapter#isEnabled(org.bytemechanics.logger.Level) 
 	 */
     public default boolean isEnabled(final LogBean _log){
@@ -48,7 +48,7 @@ public interface LoggerAdapter {
 	}
 	
 	/**
-	 * Send the given _log to the underlaying API
+	 * Send the given _log to the underlying API
 	 * @param _log the LogBean representing the log
 	 */
     public void log(final LogBean _log);

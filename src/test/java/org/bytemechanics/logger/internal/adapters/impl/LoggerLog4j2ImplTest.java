@@ -63,7 +63,7 @@ public class LoggerLog4j2ImplTest {
 	@Mocked 
 	@Injectable
 	@SuppressWarnings("NonConstantLogger")
-	private org.apache.logging.log4j.Logger underlayingLogger;
+	private org.apache.logging.log4j.Logger underlyingLogger;
 	@Tested
 	private LoggerLog4j2Impl logger;
 	
@@ -73,7 +73,7 @@ public class LoggerLog4j2ImplTest {
 	public void testGetName(){
 		
 		new Expectations() {{
-			underlayingLogger.getName(); result="my-log-name"; times=1;
+			underlyingLogger.getName(); result="my-log-name"; times=1;
 		}};
 		
 		Assertions.assertEquals("my-log-name",logger.getName());
@@ -114,7 +114,7 @@ public class LoggerLog4j2ImplTest {
 	public void testisEnabled(final Level _level,final boolean _enabled){
 
 		new Expectations() {{
-			underlayingLogger.isEnabled((org.apache.logging.log4j.Level)any); 
+			underlyingLogger.isEnabled((org.apache.logging.log4j.Level)any); 
 				result=new Delegate<org.apache.logging.log4j.Level>() {
 							public boolean delegate(org.apache.logging.log4j.Level _receivedLevel) throws Exception {
 								return (_receivedLevel.isMoreSpecificThan(org.apache.logging.log4j.Level.DEBUG));
@@ -143,7 +143,7 @@ public class LoggerLog4j2ImplTest {
 
 		final org.apache.logging.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		new Expectations() {{
-			underlayingLogger.log(translatedLevel,(Supplier<String>)any,_log.getStacktrace().orElse(null)); 
+			underlyingLogger.log(translatedLevel,(Supplier<String>)any,_log.getThrowable().orElse(null)); 
 				times=1;
 		}};
 		logger.log(_log);

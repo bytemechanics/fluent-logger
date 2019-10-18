@@ -144,7 +144,7 @@ public class LoggerLog4jImplTest {
 		final org.apache.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		final String message=_log.getMessage().get();
 		new Expectations() {{
-			underlayingLogger.log("org.bytemechanics.logger.internal.adapters.impl.LoggerLog4jImplTest",translatedLevel,message,_log.getStacktrace().orElse(null)); 
+			underlayingLogger.log("org.bytemechanics.logger.internal.adapters.impl.LoggerLog4jImplTest",translatedLevel,message,_log.getThrowable().orElse(null)); 
 				times=1;
 		}};
 		logger.log(_log);

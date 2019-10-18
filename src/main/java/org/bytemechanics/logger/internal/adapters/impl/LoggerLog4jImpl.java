@@ -67,6 +67,6 @@ public class LoggerLog4jImpl implements LoggerAdapter {
 	public void log(final LogBean _log) {
 		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
 		final Level level=translateLevel(_log.getLevel());
-		this.internalLogger.log(stack.getClassName(),level,_log.getMessage().get(),_log.getStacktrace().orElse(null));
+		this.internalLogger.log(stack.getClassName(),level,_log.getMessage().get(),_log.getThrowable().orElse(null));
 	}
 }

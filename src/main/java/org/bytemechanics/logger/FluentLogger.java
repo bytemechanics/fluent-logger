@@ -48,7 +48,7 @@ public final class FluentLogger {
 		
 	/**
 	 * Get the current LoggerFactoryAdapter instance
-	 * @return the default LoggerFactoryAdapter instance or the configured as system proterty buy LOGGER_FACTORY_ADAPTER_KEY
+	 * @return the default LoggerFactoryAdapter instance or the configured as system property buy LOGGER_FACTORY_ADAPTER_KEY
 	 * @see FluentLogger#LOGGER_FACTORY_ADAPTER_KEY
 	 */
 	protected static LoggerFactoryAdapter getLoggerFactory(){
@@ -120,7 +120,7 @@ public final class FluentLogger {
 
 	
 	/**
-	 * Allows send the given _log to the underlaying logger API if the log level is enabled
+	 * Allows send the given _log to the underlying logger API if the log level is enabled
 	 * @param _log log to send
 	 * @return same FluentLogger instance
 	 */
@@ -131,7 +131,7 @@ public final class FluentLogger {
         return this;
     }
 	/**
-	 * Allows send the given _message replacing the _args prefixed with any previous registered prefix and arguments to the underlaying logger API
+	 * Allows send the given _message replacing the _args prefixed with any previous registered prefix and arguments to the underlying logger API
 	 * @param _level log level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -139,9 +139,11 @@ public final class FluentLogger {
 	 */
 	public FluentLogger log(final Level _level,final String _message, final Object... _args) {
 
-		this.loggerAdapter.log(LogBean.of(_level)
+		if(this.loggerAdapter.isEnabled(_level)){
+			this.loggerAdapter.log(LogBean.of(_level)
 											.message(prefix).args(this.args)
 											.message(_message).args(_args));
+		}
 		return this;
     }
 
@@ -159,7 +161,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
 	public FluentLogger finest(final Throwable _exception) {
-        return finest("", _exception);
+		return log(Level.FINEST, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a finest level
@@ -168,7 +170,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger finest(final String _message, final Object... _args) {
-        return log(Level.FINEST,null, _message, _args);
+        return log(Level.FINEST, _message, _args);
     }
 
 	/**
@@ -177,7 +179,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger trace(final Throwable _exception) {
-        return trace("", _exception);
+		return log(Level.TRACE, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a trace level
@@ -186,7 +188,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger trace(final String _message, final Object... _args) {
-        return log(Level.TRACE,null, _message, _args);
+        return log(Level.TRACE, _message, _args);
     }
 
 	/**
@@ -195,7 +197,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger debug(final Throwable _exception) {
-        return debug("", _exception);
+		return log(Level.DEBUG, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a debug level
@@ -204,7 +206,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger debug(final String _message, final Object... _args) {
-        return log(Level.DEBUG,null, _message, _args);
+        return log(Level.DEBUG, _message, _args);
     }
 
 	/**
@@ -213,7 +215,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger info(final Throwable _exception) {
-        return info("", _exception);
+		return log(Level.INFO, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a info level
@@ -222,7 +224,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
      public FluentLogger info(final String _message, final Object... _args) {
-        return log(Level.INFO,null, _message, _args);
+        return log(Level.INFO, _message, _args);
     }
 
  	/**
@@ -231,7 +233,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
    public FluentLogger warning(final Throwable _exception) {
-        return warning("", _exception);
+		return log(Level.WARNING, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a warning level
@@ -240,7 +242,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger warning(final String _message, final Object... _args) {
-        return log(Level.WARNING,null, _message, _args);
+        return log(Level.WARNING, _message, _args);
     }
 
 	/**
@@ -249,7 +251,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger error(final Throwable _exception) {
-        return error("", _exception);
+		return log(Level.ERROR, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a error level
@@ -258,7 +260,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
      public FluentLogger error(final String _message, final Object... _args) {
-        return log(Level.ERROR,null, _message, _args);
+        return log(Level.ERROR, _message, _args);
     }
 
 	/**
@@ -267,7 +269,7 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
     public FluentLogger critical(final Throwable _exception) {
-        return critical("", _exception);
+		return log(Level.CRITICAL, "", _exception);
     }
 	/**
 	 * Log the given _message and _args to a critical level
@@ -276,6 +278,6 @@ public final class FluentLogger {
 	 * @return this logger
 	 */
      public FluentLogger critical(final String _message, final Object... _args) {
-        return log(Level.CRITICAL,null, _message, _args);
+        return log(Level.CRITICAL, _message, _args);
     }
 }

@@ -27,9 +27,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.FluentLogger;
 import org.bytemechanics.fluentlogger.internal.commons.lang.ArrayUtils;
 import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
+import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
@@ -69,7 +69,7 @@ public class LogBean {
 	/**
 	 * Append to the current message
 	 * @param _message new message to append
-	 * @return this logbean
+	 * @return this logBean
 	 */
 	public LogBean message(final String _message) {
 		this.message.add(_message);
@@ -78,7 +78,7 @@ public class LogBean {
 	/**
 	 * Append new arguments to the current argument queue
 	 * @param _args arguments to append
-	 * @return this logbean
+	 * @return this logBean
 	 */
 	public LogBean args(final Object... _args) {
 		this.args.add(_args);
@@ -87,7 +87,7 @@ public class LogBean {
 	/**
 	 * Replaces current log time with the given one
 	 * @param _time time to set
-	 * @return new logbean with the new time
+	 * @return new logBean with the new time
 	 */
 	public LogBean time(final LocalDateTime _time) {
 		return new LogBean(this.level, _time, this.message, this.args);
@@ -149,7 +149,7 @@ public class LogBean {
 	 * Retrieve an optional of throwable from the previously given arguments
 	 * @return throwable optional
 	 */
-	public Optional<Throwable> getStacktrace() {
+	public Optional<Throwable> getThrowable() {
 		return this.args.stream()
 						.flatMap(Stream::of)
 						.filter(LogBean::isThrowable)

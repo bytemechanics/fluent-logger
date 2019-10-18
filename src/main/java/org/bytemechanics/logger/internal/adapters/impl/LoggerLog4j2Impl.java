@@ -62,6 +62,6 @@ public class LoggerLog4j2Impl implements LoggerAdapter {
 	@Override
 	public void log(final LogBean _log) {
 		final Level level=translateLevel(_log.getLevel());
-		this.internalLogger.log(level,_log.getMessage(),_log.getStacktrace().orElse(null));
+		this.internalLogger.log(level,_log.getMessage(),_log.getThrowable().orElse(null));
 	}
 }

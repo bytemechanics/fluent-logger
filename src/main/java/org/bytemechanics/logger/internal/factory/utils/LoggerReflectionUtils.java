@@ -28,7 +28,7 @@ import org.bytemechanics.logger.internal.adapters.LoggerAPIProvider;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
- * Utility class to find correct logger api using reflection
+ * Utility class to find correct logger API using reflection
  * @author afarre
  * @since 2.0.0
  */
@@ -36,7 +36,7 @@ public class LoggerReflectionUtils{
 
 	/**
 	 * Verify if the _api exist by checking the LoggerAPIProvider detectionClass
-	 * @param _api logger api to check
+	 * @param _api logger API to check
 	 * @return true if the detectionClass exist in classpath false otherwise
 	 * @see LoggerAPIProvider#getDetectionClass() 
 	 */
@@ -54,8 +54,8 @@ public class LoggerReflectionUtils{
 		return reply;
 	}
 	/**
-	 * Get the constructor of the given _api usign the LoggerAPIProvider implementation class
-	 * @param _api logger api to check
+	 * Get the constructor of the given _api using the LoggerAPIProvider implementation class
+	 * @param _api logger API to check
 	 * @return String parameterized constructor of the implementation class if exist null otherwise
 	 * @see LoggerAPIProvider#getImplementationClass() 
 	 */
@@ -89,7 +89,7 @@ public class LoggerReflectionUtils{
 	}
 	/**
 	 * Get a LoggerAdapter lambda provider from string unchecking any possible checked exception
-	 * @param _constructor contructor to use
+	 * @param _constructor constructor to use
 	 * @return Function to retrieve LoggerAdapter from a given string logger name
 	 * @see LoggerAdapter
 	 */
@@ -99,7 +99,7 @@ public class LoggerReflectionUtils{
 
 	/**
 	 * Get the first a LoggerAdapter lambda provider from string available from LoggerAPIProvider enum values
-	 * @param _defaultLoggerSupplier default lambda if no api provider found
+	 * @param _defaultLoggerSupplier default lambda if no API provider found
 	 * @return Function to retrieve LoggerAdapter from a given string logger name
 	 * @see LoggerAPIProvider
 	 */

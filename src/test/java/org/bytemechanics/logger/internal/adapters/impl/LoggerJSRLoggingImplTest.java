@@ -139,7 +139,7 @@ public class LoggerJSRLoggingImplTest {
 	public void testLog(final LogBean _log){
 
 		final java.util.logging.Level translatedLevel=logger.translateLevel(_log.getLevel());
-		if(_log.getStacktrace().isPresent()){
+		if(_log.getThrowable().isPresent()){
 			new Expectations() {{
 				underlayingLogger.logp(translatedLevel,"org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImplTest","testLog", withInstanceOf(Throwable.class),(Supplier<String>)any); 
 					times=1;

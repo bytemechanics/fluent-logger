@@ -24,15 +24,18 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import mockit.Delegate;
 import mockit.Expectations;
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.bytemechanics.fluentlogger.FluentLogger;
 import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
+import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.LogBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -58,6 +61,12 @@ public class LoggerLog4j2ExtensionTest {
         System.out.println(">>>>> "+this.getClass().getSimpleName()+" >>>> "+testInfo.getTestMethod().map(Method::getName).orElse("Unkown")+""+testInfo.getTags().toString()+" >>>> "+testInfo.getDisplayName());
     }
 
+	@Injectable
+	private String loggerName="my-log-name";
+	@Mocked 
+	@Injectable
+	@SuppressWarnings("NonConstantLogger")
+	private org.apache.logging.log4j.spi.AbstractLogger underlyingLogger;
 	@Tested
 	@Mocked 
 	private LoggerLog4j2Extension logger;
@@ -80,6 +89,13 @@ public class LoggerLog4j2ExtensionTest {
 		Assertions.assertEquals(_levelTranslated,logger.translateLevel(_level));
 	}
 	
+	
+	@Test
+	@DisplayName("GetName should call to underlaying logger getName")
+	public void testGetName(){
+		
+		Assertions.assertEquals(loggerName,logger.getName());
+	}
 	
 	static Stream<Arguments> logLevelDatapack() {
 	    return Stream.of(
@@ -127,7 +143,7 @@ public class LoggerLog4j2ExtensionTest {
 
 		final org.apache.logging.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		new Expectations() {{
-			logger.logIfEnabled(FluentLogger.class.getName(),translatedLevel,null,(Supplier<String>)any,_log.getStacktrace().orElse(null)); 
+			logger.logIfEnabled(FluentLogger.class.getName(),translatedLevel,null,(Supplier<String>)any,_log.getThrowable().orElse(null)); 
 				times=1;
 		}};
 		logger.log(_log);
