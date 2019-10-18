@@ -1,0 +1,10 @@
+org.bytemechanics.fluentlogger.internal.commons.functional
+org.bytemechanics.fluentlogger.internal.commons.lang
+org.bytemechanics.fluentlogger.internal.commons.string
+org.bytemechanics.logger
+org.bytemechanics.logger.internal
+org.bytemechanics.logger.internal.adapters
+org.bytemechanics.logger.internal.adapters.impl
+org.bytemechanics.logger.internal.factory
+org.bytemechanics.logger.internal.factory.impl
+org.bytemechanics.logger.internal.factory.utils
