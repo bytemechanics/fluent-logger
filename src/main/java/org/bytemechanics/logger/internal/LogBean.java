@@ -198,7 +198,7 @@ public class LogBean {
 			return true;
 		if(this.args != null && other.args == null){
 			return false;
-		}else if(this.args != null && other.args == null){
+		}else if(this.args == null && other.args != null){
 			return false;
 		}
 		Object[] objects1=this.args.stream()
