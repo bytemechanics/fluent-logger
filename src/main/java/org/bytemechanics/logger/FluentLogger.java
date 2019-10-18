@@ -55,7 +55,7 @@ public final class FluentLogger {
 
 		final String className=System.getProperty(LOGGER_FACTORY_ADAPTER_KEY);
 		if((className!=null)&&(!LOGGER_FACTORY.getClass().getName().equals(className))){
-			synchronized(LOGGER_FACTORY){
+			synchronized(FluentLogger.class){
 				if(!LOGGER_FACTORY.getClass().getName().equals(className)){
 					final Class factoryClazzCandidate;
 					try {

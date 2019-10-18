@@ -200,14 +200,15 @@ public class LogBean {
 			return false;
 		}else if(this.args == null && other.args != null){
 			return false;
+		}else{
+			Object[] objects1=this.args.stream()
+											.reduce(ArrayUtils::concat)
+											.orElse(new Object[0]);
+			Object[] objects2=other.args.stream()
+											.reduce(ArrayUtils::concat)
+											.orElse(new Object[0]);
+			return Arrays.equals(objects1, objects2);
 		}
-		Object[] objects1=this.args.stream()
-										.reduce(ArrayUtils::concat)
-										.orElse(new Object[0]);
-		Object[] objects2=other.args.stream()
-										.reduce(ArrayUtils::concat)
-										.orElse(new Object[0]);
-		return Arrays.equals(objects1, objects2);
 	}
 	/**@see Object#toString()  */
 	@Override
