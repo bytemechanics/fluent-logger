@@ -196,21 +196,15 @@ public class LogBean {
 		}
 		if(this.args == other.args)
 			return true;
-		if(this.args != null && other.args == null){
-			return false;
-		}else if(this.args == null && other.args != null){
-			return false;
-		}else if(this.args == null && other.args == null){
-			return true;
-		}else{
-			Object[] objects1=this.args.stream()
-											.reduce(ArrayUtils::concat)
-											.orElse(new Object[0]);
-			Object[] objects2=other.args.stream()
-											.reduce(ArrayUtils::concat)
-											.orElse(new Object[0]);
-			return Arrays.equals(objects1, objects2);
-		}
+		final Object[] objects1=Optional.ofNullable(this.args)
+										.flatMap(arg -> arg.stream()
+															.reduce(ArrayUtils::concat))
+										.orElse(new Object[0]);
+		final Object[] objects2=Optional.ofNullable(other.args)
+										.flatMap(arg -> arg.stream()
+															.reduce(ArrayUtils::concat))
+										.orElse(new Object[0]);
+		return Arrays.equals(objects1, objects2);
 	}
 	/**@see Object#toString()  */
 	@Override
