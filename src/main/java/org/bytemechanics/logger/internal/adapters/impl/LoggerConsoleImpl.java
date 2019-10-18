@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.LoggerAdapter;
+import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
- *
+ * Standard output logger adapter (intended to use only as backup)
  * @author afarre
+ * @since 2.0.0
  */
 public class LoggerConsoleImpl implements LoggerAdapter {
 
@@ -40,6 +41,11 @@ public class LoggerConsoleImpl implements LoggerAdapter {
 		return SimpleFormat.format(PATTERN,_log.getTime(),_log.getLevel().name(),this.logName,_log.getMessage().get());
 	}
 	
+	@Override
+	public String getName() {
+		return this.logName;
+	}
+
 	@Override
 	public boolean isEnabled(final Level _level) {
 		return Level.INFO.index<=_level.index;

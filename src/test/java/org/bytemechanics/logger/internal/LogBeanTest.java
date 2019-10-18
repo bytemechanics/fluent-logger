@@ -35,7 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 /**
- * @author E103880
+ * @author afarre
  */
 public class LogBeanTest {
 	
@@ -148,8 +148,9 @@ public class LogBeanTest {
 	}
 	
 	@Test
-	public void testEquals(){
+	public void testEquals() throws InterruptedException{
 		final LocalDateTime time=LocalDateTime.now();
+		Thread.sleep(2);
 		final IOException throwable=new IOException("MyIOException");
 		
 		LogBean bean1=LogBean.of(Level.ERROR).message("myMessage").args("arg1",2).args(throwable).args("arg3").time(time);
@@ -176,8 +177,9 @@ public class LogBeanTest {
 	}
 	
 	@Test //TODO Fail
-	public void testHashCode(){
+	public void testHashCode() throws InterruptedException{
 		final LocalDateTime time=LocalDateTime.now();
+		Thread.sleep(2);
 		final IOException throwable=new IOException("MyIOException");
 		
 		LogBean bean1=LogBean.of(Level.ERROR).message("myMessage").args("arg1",2).args(throwable).args("arg3").time(time);
@@ -188,6 +190,8 @@ public class LogBeanTest {
 		Assertions.assertNotEquals(bean1.hashCode(),bean2.hashCode());
 		
 		bean2=LogBean.of(Level.DEBUG).message("myMessage").args("arg1",2).args(throwable).args("arg3").time(time);
+		Assertions.assertNotEquals(bean1.hashCode(),bean2.hashCode());
+		bean2=LogBean.of(Level.TRACE).message("myMessage").args("arg1",2).args(throwable).args("arg3").time(time);
 		Assertions.assertNotEquals(bean1.hashCode(),bean2.hashCode());
 		bean2=LogBean.of(Level.ERROR).message("myMessage2").args("arg1",2).args(throwable).args("arg3").time(time);
 		Assertions.assertNotEquals(bean1.hashCode(),bean2.hashCode());

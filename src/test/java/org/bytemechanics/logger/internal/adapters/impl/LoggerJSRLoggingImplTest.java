@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -26,26 +27,27 @@ import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.apache.log4j.Priority;
 import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.LogBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
- * @author E103880
+ * @author afarre
  */
-public class LoggerLog4jImplTest {
+public class LoggerJSRLoggingImplTest {
 	
 	@BeforeAll
 	public static void setup() throws IOException{
-		System.out.println(">>>>> LoggerLog4jImplTest >>>> setupSpec");
+		System.out.println(">>>>> LoggerJSRLoggingImplTest >>>> setupSpec");
 		try(InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties")){
 			LogManager.getLogManager().readConfiguration(inputStream);
 		}catch (final IOException e){
@@ -61,24 +63,33 @@ public class LoggerLog4jImplTest {
 	@Mocked 
 	@Injectable
 	@SuppressWarnings("NonConstantLogger")
-	private org.apache.log4j.Logger underlayingLogger;
+	private Logger underlayingLogger;
 	@Tested
-	private LoggerLog4jImpl logger;
+	private LoggerJSRLoggingImpl logger;
+
+	
+	@Test
+	@DisplayName("GetName should call to underlaying logger getName")
+	public void testGetName(){
+		
+		Assertions.assertEquals("my-log-name",new LoggerJSRLoggingImpl(Logger.getLogger("my-log-name"))
+													.getName());
+	}
 	
 	static Stream<Arguments> translateLevelDatapack() {
 	    return Stream.of(
-			Arguments.of(Level.FINEST,org.apache.log4j.Level.TRACE),		
-			Arguments.of(Level.TRACE,org.apache.log4j.Level.DEBUG),		
-			Arguments.of(Level.DEBUG,org.apache.log4j.Level.DEBUG),		
-			Arguments.of(Level.INFO,org.apache.log4j.Level.INFO),		
-			Arguments.of(Level.WARNING,org.apache.log4j.Level.WARN),		
-			Arguments.of(Level.ERROR,org.apache.log4j.Level.ERROR),		
-			Arguments.of(Level.CRITICAL,org.apache.log4j.Level.FATAL)	
+			Arguments.of(Level.FINEST,java.util.logging.Level.FINEST),		
+			Arguments.of(Level.TRACE,java.util.logging.Level.FINER),		
+			Arguments.of(Level.DEBUG,java.util.logging.Level.FINE),		
+			Arguments.of(Level.INFO,java.util.logging.Level.INFO),		
+			Arguments.of(Level.WARNING,java.util.logging.Level.WARNING),		
+			Arguments.of(Level.ERROR,java.util.logging.Level.SEVERE),		
+			Arguments.of(Level.CRITICAL,java.util.logging.Level.SEVERE)	
 		);
 	}
 	@ParameterizedTest(name ="Log level={0} translation should be equal to level={1}")
 	@MethodSource("translateLevelDatapack")
-	public void testTranslateLevel(final Level _level,final org.apache.log4j.Level _levelTranslated){
+	public void testTranslateLevel(final Level _level,final java.util.logging.Level _levelTranslated){
 		Assertions.assertEquals(_levelTranslated,logger.translateLevel(_level));
 	}
 	
@@ -86,7 +97,7 @@ public class LoggerLog4jImplTest {
 	static Stream<Arguments> logLevelDatapack() {
 	    return Stream.of(
 			Arguments.of(Level.FINEST,false),		
-			Arguments.of(Level.TRACE,true),		
+			Arguments.of(Level.TRACE,false),		
 			Arguments.of(Level.DEBUG,true),		
 			Arguments.of(Level.INFO,true),		
 			Arguments.of(Level.WARNING,true),		
@@ -100,10 +111,10 @@ public class LoggerLog4jImplTest {
 	public void testisEnabled(final Level _level,final boolean _enabled){
 
 		new Expectations() {{
-			underlayingLogger.isEnabledFor((org.apache.log4j.Level)any); 
-				result=new Delegate<org.apache.log4j.Level>() {
-							public boolean delegate(org.apache.log4j.Level _receivedLevel) throws Exception {
-								return (_receivedLevel.isGreaterOrEqual(Priority.DEBUG));
+			underlayingLogger.isLoggable((java.util.logging.Level)any); 
+				result=new Delegate<java.util.logging.Level>() {
+							public boolean delegate(java.util.logging.Level _receivedLevel) throws Exception {
+								return (_receivedLevel.intValue()>400);
 							}
 						};
 				times=1;
@@ -127,12 +138,18 @@ public class LoggerLog4jImplTest {
 	@MethodSource("logDatapack")
 	public void testLog(final LogBean _log){
 
-		final org.apache.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
-		final String message=_log.getMessage().get();
-		new Expectations() {{
-			underlayingLogger.log("org.bytemechanics.logger.internal.impl.LoggerLog4jImplTest",translatedLevel,message,_log.getStacktrace().orElse(null)); 
-				times=1;
-		}};
+		final java.util.logging.Level translatedLevel=logger.translateLevel(_log.getLevel());
+		if(_log.getStacktrace().isPresent()){
+			new Expectations() {{
+				underlayingLogger.logp(translatedLevel,"org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImplTest","testLog", withInstanceOf(Throwable.class),(Supplier<String>)any); 
+					times=1;
+			}};
+		}else{
+			new Expectations() {{
+				underlayingLogger.logp(translatedLevel,"org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImplTest","testLog",(Throwable) withNull(),(Supplier<String>)any); 
+					times=1;
+			}};
+		}
 		logger.log(_log);
 	}
 }

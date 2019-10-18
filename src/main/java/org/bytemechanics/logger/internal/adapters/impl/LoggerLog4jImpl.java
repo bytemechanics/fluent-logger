@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import java.util.Optional;
 import java.util.Set;
@@ -22,11 +22,13 @@ import java.util.stream.Stream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.LoggerAdapter;
+import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
- *
+ * Logger adapter Log4j implementation
+ * @see https://logging.apache.org/log4j/1.2/
  * @author afarre
+ * @since 2.0.0
  */
 public class LoggerLog4jImpl implements LoggerAdapter {
 
@@ -47,6 +49,11 @@ public class LoggerLog4jImpl implements LoggerAdapter {
 
 	protected Level translateLevel(org.bytemechanics.logger.Level _level){
 		return LEVEL_TRANSLATION[_level.index];
+	}
+
+	@Override
+	public String getName() {
+		return this.internalLogger.getName();
 	}
 
 	@Override

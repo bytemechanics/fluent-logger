@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,13 +34,15 @@ import org.bytemechanics.logger.internal.LogBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
- * @author E103880
+ * @author afarre
  */
 public class LoggerConsoleImplTest {
 	
@@ -63,6 +65,13 @@ public class LoggerConsoleImplTest {
 	private final String logName = "my-log-name";
 	@Tested
 	private LoggerConsoleImpl logger;
+
+	
+	@Test
+	@DisplayName("GetName should call to underlaying logger getName")
+	public void testGetName(){
+		Assertions.assertEquals(logName,logger.getName());
+	}
 	
 	static Stream<Arguments> logLevelDatapack() {
 	    return Stream.of(

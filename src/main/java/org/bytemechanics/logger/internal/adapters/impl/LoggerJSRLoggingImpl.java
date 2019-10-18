@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import java.util.Optional;
 import java.util.Set;
@@ -22,11 +22,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.LoggerAdapter;
+import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
- *
+ * Standard java logging API implementation
+ * @see https://docs.oracle.com/javase/7/docs/technotes/guides/logging/index.html
  * @author afarre
+ * @since 2.0.0
  */
 public class LoggerJSRLoggingImpl implements LoggerAdapter {
 
@@ -46,8 +48,14 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 		this.internalLogger = _logger;
 	}
 
+	
 	protected Level translateLevel(org.bytemechanics.logger.Level _level){
 		return LEVEL_TRANSLATION[_level.index];
+	}
+
+	@Override
+	public String getName() {
+		return this.internalLogger.getName();
 	}
 	
 	@Override

@@ -18,6 +18,7 @@ package org.bytemechanics.logger;
 /**
  * Log levels
  * @author afarre
+ * @since 2.0.0
  */
 public enum Level {
     

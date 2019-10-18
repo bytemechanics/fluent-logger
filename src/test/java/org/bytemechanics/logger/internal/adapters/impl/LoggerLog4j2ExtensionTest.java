@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.impl;
+package org.bytemechanics.logger.internal.adapters.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +24,8 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import mockit.Delegate;
 import mockit.Expectations;
-import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.apache.logging.log4j.spi.AbstractLogger;
 import org.bytemechanics.fluentlogger.FluentLogger;
 import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.Level;
@@ -41,7 +39,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
- * @author E103880
+ * @author afarre
  */
 public class LoggerLog4j2ExtensionTest {
 	
@@ -60,13 +58,10 @@ public class LoggerLog4j2ExtensionTest {
         System.out.println(">>>>> "+this.getClass().getSimpleName()+" >>>> "+testInfo.getTestMethod().map(Method::getName).orElse("Unkown")+""+testInfo.getTags().toString()+" >>>> "+testInfo.getDisplayName());
     }
 
-	@Mocked 
-	@Injectable
-	@SuppressWarnings("NonConstantLogger")
-	private AbstractLogger underlayingLogger;
 	@Tested
 	@Mocked 
 	private LoggerLog4j2Extension logger;
+
 	
 	static Stream<Arguments> translateLevelDatapack() {
 	    return Stream.of(

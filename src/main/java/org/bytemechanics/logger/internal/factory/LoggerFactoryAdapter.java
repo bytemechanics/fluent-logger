@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.tests;
+package org.bytemechanics.logger.internal.factory;
 
-import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.LoggerAdapter;
+import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 
 /**
- *
+ * Logger factory adapter
  * @author afarre
+ * @since 2.0.0
  */
-public class LoggerAdapterImpl implements LoggerAdapter{
-
-	@Override
-	public boolean isEnabled(Level _level) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public void log(LogBean _logBean) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-	
+public interface LoggerFactoryAdapter {
+    
+	/**
+	 * Return an instance of LoggerAdapter from the given _name
+	 * @param _logger Name of the logger to instantiate
+	 * @return An instance of LoggerAdapter or null
+	 * @see LoggerAdapter
+	 */
+    public LoggerAdapter getLogger(final String _logger);
 }
