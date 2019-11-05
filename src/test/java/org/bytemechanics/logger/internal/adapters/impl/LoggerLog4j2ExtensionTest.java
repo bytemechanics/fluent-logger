@@ -94,7 +94,8 @@ public class LoggerLog4j2ExtensionTest {
 	@DisplayName("GetName should call to underlaying logger getName")
 	public void testGetName(){
 		
-		Assertions.assertEquals(loggerName,logger.getName());
+		LoggerLog4j2Extension namedLogger=new LoggerLog4j2Extension(loggerName);
+		Assertions.assertEquals(loggerName,namedLogger.getName());
 	}
 	
 	static Stream<Arguments> logLevelDatapack() {

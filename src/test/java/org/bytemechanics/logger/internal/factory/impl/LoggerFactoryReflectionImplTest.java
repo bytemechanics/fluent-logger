@@ -28,7 +28,7 @@ import mockit.Tested;
 import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 import org.bytemechanics.logger.internal.adapters.impl.LoggerConsoleImpl;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -81,6 +81,6 @@ public class LoggerFactoryReflectionImplTest {
 		new Expectations() {{
 			loggerFactory.apply("my.logger"); result=consoleLogger; times = 1;
 	    }};
-		Assert.assertEquals(consoleLogger,factory.getLogger("my.logger"));
+		Assertions.assertEquals(consoleLogger,factory.getLogger("my.logger"));
 	}
 }

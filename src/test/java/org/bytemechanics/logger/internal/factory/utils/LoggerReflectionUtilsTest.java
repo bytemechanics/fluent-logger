@@ -33,7 +33,7 @@ import org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImpl;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.mocks.NoSuchMethodLoggerAdapter;
 import org.bytemechanics.logger.mocks.SecurityLoggerAdapter;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -71,7 +71,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getDetectionClass(); result=String.class; times = 1;
 	    }};
-		Assert.assertTrue(loggerReflectionUtils.existAPI(_loggerAPI));
+		Assertions.assertTrue(loggerReflectionUtils.existAPI(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Is API Present presence not found")
@@ -80,7 +80,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getDetectionClass(); result=new ClassNotFoundException("class-not-found"); times = 1;
 	    }};
-		Assert.assertFalse(loggerReflectionUtils.existAPI(_loggerAPI));
+		Assertions.assertFalse(loggerReflectionUtils.existAPI(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Is API Present raises linkage error")
@@ -89,7 +89,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getDetectionClass(); result=new LinkageError("linkage.error"); times = 1;
 	    }};
-		Assert.assertFalse(loggerReflectionUtils.existAPI(_loggerAPI));
+		Assertions.assertFalse(loggerReflectionUtils.existAPI(_loggerAPI));
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getImplementationClass(); result=LoggerJSRLoggingImpl.class; times = 1;
 	    }};
-		Assert.assertEquals(LoggerJSRLoggingImpl.class.getConstructor(String.class),loggerReflectionUtils.getAPIConstructor(_loggerAPI));
+		Assertions.assertEquals(LoggerJSRLoggingImpl.class.getConstructor(String.class),loggerReflectionUtils.getAPIConstructor(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Get API Constructor class not found")
@@ -109,7 +109,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getImplementationClass(); result=new ClassNotFoundException("implementation.not.found"); times = 1;
 	    }};
-		Assert.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
+		Assertions.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Get API Constructor class linkage error")
@@ -118,7 +118,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getImplementationClass(); result=new LinkageError("implementation.linkage"); times = 1;
 	    }};
-		Assert.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
+		Assertions.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Get API Constructor class class cast")
@@ -127,7 +127,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getImplementationClass(); result=String.class; times = 1;
 	    }};
-		Assert.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
+		Assertions.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Get API Constructor class no such method")
@@ -136,7 +136,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			_loggerAPI.getImplementationClass(); result=NoSuchMethodLoggerAdapter.class; times = 1;
 	    }};
-		Assert.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
+		Assertions.assertNull(loggerReflectionUtils.getAPIConstructor(_loggerAPI));
 	}
 	@Test
 	@DisplayName("Get API Constructor class security exception")
@@ -145,7 +145,7 @@ public class LoggerReflectionUtilsTest {
 		new Expectations() {{
 			loggerAPI.getImplementationClass(); result=SecurityLoggerAdapter.class; times = 1;
 	    }};
-		Assert.assertNull(loggerReflectionUtils.getAPIConstructor(loggerAPI));
+		Assertions.assertNull(loggerReflectionUtils.getAPIConstructor(loggerAPI));
 	}
 
 	@Test
@@ -161,8 +161,8 @@ public class LoggerReflectionUtilsTest {
 		}
 		
 		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.buildFactory(constructor);
-		Assert.assertNotNull(loggerFactory);
-		Assert.assertNotNull(loggerFactory.apply("myLog"));
+		Assertions.assertNotNull(loggerFactory);
+		Assertions.assertNotNull(loggerFactory.apply("myLog"));
 	}
 
 	@SuppressWarnings("Convert2Lambda")
@@ -191,10 +191,10 @@ public class LoggerReflectionUtilsTest {
 		
 		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(LoggerFactoryReflectionImpl::consoleLogger);
 
-		Assert.assertNotNull(loggerFactory);
+		Assertions.assertNotNull(loggerFactory);
 		LoggerAdapter logger=loggerFactory.apply("myLog");
-		Assert.assertNotNull(logger);
-		Assert.assertTrue(loggerFactory.apply("myLog") instanceof LoggerJSRLoggingImpl);
+		Assertions.assertNotNull(logger);
+		Assertions.assertTrue(loggerFactory.apply("myLog") instanceof LoggerJSRLoggingImpl);
 	}
 
 	@SuppressWarnings("Convert2Lambda")
@@ -215,9 +215,9 @@ public class LoggerReflectionUtilsTest {
 		
 		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(LoggerFactoryReflectionImpl::consoleLogger);
 
-		Assert.assertNotNull(loggerFactory);
+		Assertions.assertNotNull(loggerFactory);
 		LoggerAdapter logger=loggerFactory.apply("myLog");
-		Assert.assertNotNull(logger);
-		Assert.assertTrue(loggerFactory.apply("myLog") instanceof LoggerConsoleImpl);
+		Assertions.assertNotNull(logger);
+		Assertions.assertTrue(loggerFactory.apply("myLog") instanceof LoggerConsoleImpl);
 	}
 }
