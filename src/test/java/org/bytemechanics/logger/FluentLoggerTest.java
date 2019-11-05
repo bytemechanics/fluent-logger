@@ -96,7 +96,7 @@ public class FluentLoggerTest {
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,DummieLoggerFactory.class.getName());
     }
 	@AfterEach
-    void afterEachTest(final TestInfo testInfo) {
+    void afterEachTest() {
 		System.getProperties().remove(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY);
     }
 	
@@ -111,14 +111,14 @@ public class FluentLoggerTest {
 	@DisplayName("Get logger factory with no LOGGER_FACTORY_ADAPTER_KEY property set returns the default instance")
 	public void testGetLoggerFactory_notSet(){
 		System.getProperties().remove(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY);
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		Assertions.assertSame(instance,FluentLogger.getLoggerFactory());
 	}
 	@Test
 	@Order(2)
 	@DisplayName("Get logger factory with LOGGER_FACTORY_ADAPTER_KEY as same class of the current instance should return the same instance")
 	public void testGetLoggerFactory_sameClass(){
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,instance.getClass().getName());
 		Assertions.assertSame(instance,FluentLogger.getLoggerFactory());
 	}
@@ -127,7 +127,7 @@ public class FluentLoggerTest {
 	@DisplayName("Get logger factory with LOGGER_FACTORY_ADAPTER_KEY with non implementing LoggerFactoryAdapter class should return same instance")
 	public void testGetLoggerFactory_wrongClass(){
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,String.class.getName());
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		Assertions.assertSame(instance,FluentLogger.getLoggerFactory());
 	}
 	@Test
@@ -135,7 +135,7 @@ public class FluentLoggerTest {
 	@DisplayName("Get logger factory with LOGGER_FACTORY_ADAPTER_KEY with non existent class class should return same instance")
 	public void testGetLoggerFactory_notFound(){
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,DummieLoggerFactoryNoConstructor.class.getName());
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		Assertions.assertSame(instance,FluentLogger.getLoggerFactory());
 	}
 	@Test
@@ -143,7 +143,7 @@ public class FluentLoggerTest {
 	@DisplayName("Get logger factory with LOGGER_FACTORY_ADAPTER_KEY with non empty constructor class class should return same instance")
 	public void testGetLoggerFactory_noEmptyConstructor(){
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,DummieLoggerFactoryPrivateConstructor.class.getName());
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		Assertions.assertSame(instance,FluentLogger.getLoggerFactory());
 	}
 	@Test
@@ -151,7 +151,7 @@ public class FluentLoggerTest {
 	@DisplayName("Get logger factory with LOGGER_FACTORY_ADAPTER_KEY with correct class should return distinct instance")
 	public void testGetLoggerFactory_newSucc(){
 		System.setProperty(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY,DummieLoggerFactory.class.getName());
-		LoggerFactoryAdapter instance=FluentLogger.LOGGER_FACTORY;
+		LoggerFactoryAdapter instance=FluentLogger.loggerFactory;
 		Assertions.assertTrue(instance instanceof LoggerFactoryReflectionImpl);
 		LoggerFactoryAdapter actual=FluentLogger.getLoggerFactory();
 		Assertions.assertNotSame(instance,actual);

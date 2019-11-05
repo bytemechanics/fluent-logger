@@ -55,16 +55,17 @@ public class LoggerReflectionUtils{
 	}
 	/**
 	 * Get the constructor of the given _api using the LoggerAPIProvider implementation class
+	 * @param <T> logger adapter type
 	 * @param _api logger API to check
 	 * @return String parameterized constructor of the implementation class if exist null otherwise
 	 * @see LoggerAPIProvider#getImplementationClass() 
 	 */
-	protected Constructor<? extends LoggerAdapter> getAPIConstructor(final LoggerAPIProvider _api){
+	protected <T extends LoggerAdapter> Constructor<T> getAPIConstructor(final LoggerAPIProvider _api){
 		
-		Constructor<? extends LoggerAdapter> reply=null;
+		Constructor<T> reply=null;
 		
 		try {
-			final Class<? extends LoggerAdapter> loggerAdapterClass=(Class<? extends LoggerAdapter>)_api.getImplementationClass();
+			final Class<T> loggerAdapterClass=(Class<T>)_api.getImplementationClass();
 			if(!LoggerAdapter.class.isAssignableFrom(loggerAdapterClass))
 				throw new ClassCastException(SimpleFormat.format("Class {} does not implement {}",loggerAdapterClass,LoggerAdapter.class));
 			reply=loggerAdapterClass.getConstructor(String.class);
@@ -94,7 +95,7 @@ public class LoggerReflectionUtils{
 	 * @see LoggerAdapter
 	 */
 	protected Function<String,LoggerAdapter> buildFactory(final Constructor<? extends LoggerAdapter> _constructor){
-		return LambdaUnchecker.uncheckedFunction(loggerName -> _constructor.newInstance(loggerName));
+		return LambdaUnchecker.uncheckedFunction(_constructor::newInstance);
 	}
 
 	/**

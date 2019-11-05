@@ -34,8 +34,6 @@ import org.bytemechanics.logger.internal.LogBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -87,15 +85,6 @@ public class LoggerLog4j2ExtensionTest {
 	@MethodSource("translateLevelDatapack")
 	public void testTranslateLevel(final Level _level,final org.apache.logging.log4j.Level _levelTranslated){
 		Assertions.assertEquals(_levelTranslated,logger.translateLevel(_level));
-	}
-	
-	
-	@Test
-	@DisplayName("GetName should call to underlaying logger getName")
-	public void testGetName(){
-		
-		LoggerLog4j2Extension namedLogger=new LoggerLog4j2Extension(loggerName);
-		Assertions.assertEquals(loggerName,namedLogger.getName());
 	}
 	
 	static Stream<Arguments> logLevelDatapack() {

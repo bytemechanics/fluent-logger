@@ -47,11 +47,6 @@ public class LoggerLog4j2Extension extends ExtendedLoggerWrapper implements Logg
 	}
 	
 	@Override
-	public String getName() {
-		return super.getName();
-	}
-
-	@Override
 	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
 		return Optional.of(_level)
 						.map(this::translateLevel)

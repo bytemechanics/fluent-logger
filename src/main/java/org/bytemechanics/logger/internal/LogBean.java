@@ -56,9 +56,6 @@ public class LogBean {
 	private LogBean(final Level _level) {
 		this(_level,LocalDateTime.now(),new ArrayList<>(),new ArrayList<>());
 	}
-	private LogBean(final Level _level,final LocalDateTime _time) {
-		this(_level,_time,new ArrayList<>(),new ArrayList<>());
-	}
 	private LogBean(final Level _level,final LocalDateTime _time,final List<String> _message,final List<Object[]> _args) {
 		this.time=_time;
 		this.level=_level;
