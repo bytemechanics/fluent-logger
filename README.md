@@ -1,7 +1,7 @@
 # Fluent Logger
 [![Latest version](https://maven-badges.herokuapp.com/maven-central/org.bytemechanics/fluent-logger/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.bytemechanics/fluent-logger/badge.svg)
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.bytemechanics%3Afluent-logger)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
-[![Coverage](https://sonarcloud.io/api/badges/measure?key=org.bytemechanics%3Afluent-logger&metric=coverage)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=org.bytemechanics%3Afluent-logger&metric=alert_status)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.bytemechanics%3Afluent-logger&metric=coverage)](https://sonarcloud.io/dashboard/index/org.bytemechanics%3Afluent-logger)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Simple logging abstraction with standard java logging system
