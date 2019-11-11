@@ -33,7 +33,7 @@ import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
 public class LoggerLog4jImpl implements LoggerAdapter {
 
 	private static final Level[] LEVEL_TRANSLATION = {Level.TRACE, Level.DEBUG, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
-	private static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(LoggerLog4jImpl.class.getName(),org.apache.logging.log4j.Logger.class.getName())
+	private static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(LoggerLog4jImpl.class.getName())
 																	.collect(Collectors.toSet());
 
 	

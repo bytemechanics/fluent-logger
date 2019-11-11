@@ -16,10 +16,10 @@
 package org.bytemechanics.logger;
 
 import java.util.Optional;
-import org.bytemechanics.fluentlogger.internal.commons.lang.ArrayUtils;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.internal.LogBean;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.internal.commons.lang.ArrayUtils;
+import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 

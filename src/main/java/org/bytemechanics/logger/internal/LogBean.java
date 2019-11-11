@@ -27,11 +27,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.internal.commons.lang.ArrayUtils;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.internal.commons.lang.ArrayUtils;
+import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
@@ -131,7 +131,9 @@ public class LogBean {
 		final Set<String> skippedClasses=new HashSet<>(SKIPPED_CLASS_NAMES);
 		skippedClasses.addAll(_classesToSkip);
 		return Stream.of(Thread.currentThread().getStackTrace())
+								.peek(stack -> System.out.println("found: "+stack.getClassName()))
 								.filter(stack -> !skippedClasses.contains(stack.getClassName()))
+								.peek(stack -> System.out.println("passed: "+stack.getClassName()))
 								.findFirst()
 								.orElse(new StackTraceElement(UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, 0));
 	}
