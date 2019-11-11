@@ -131,9 +131,7 @@ public class LogBean {
 		final Set<String> skippedClasses=new HashSet<>(SKIPPED_CLASS_NAMES);
 		skippedClasses.addAll(_classesToSkip);
 		return Stream.of(Thread.currentThread().getStackTrace())
-								.peek(stack -> System.out.println("found: "+stack.getClassName()))
 								.filter(stack -> !skippedClasses.contains(stack.getClassName()))
-								.peek(stack -> System.out.println("passed: "+stack.getClassName()))
 								.findFirst()
 								.orElse(new StackTraceElement(UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, 0));
 	}
