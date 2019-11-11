@@ -27,9 +27,9 @@ import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
 import org.apache.log4j.Priority;
-import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.internal.LogBean;
+import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -144,7 +144,7 @@ public class LoggerLog4jImplTest {
 		final org.apache.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		final String message=_log.getMessage().get();
 		new Expectations() {{
-			underlayingLogger.log("org.bytemechanics.logger.internal.adapters.impl.LoggerLog4jImplTest",translatedLevel,message,_log.getThrowable().orElse(null)); 
+			underlayingLogger.log("org.bytemechanics.logger.FluentLogger",translatedLevel,message,_log.getThrowable().orElse(null)); 
 				times=1;
 		}};
 		logger.log(_log);

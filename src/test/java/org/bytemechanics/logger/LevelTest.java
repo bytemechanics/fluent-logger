@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
+import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

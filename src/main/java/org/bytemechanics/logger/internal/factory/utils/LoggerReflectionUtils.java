@@ -22,10 +22,10 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.bytemechanics.fluentlogger.internal.commons.functional.LambdaUnchecker;
-import org.bytemechanics.fluentlogger.internal.commons.string.SimpleFormat;
 import org.bytemechanics.logger.internal.adapters.LoggerAPIProvider;
 import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
+import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 
 /**
  * Utility class to find correct logger API using reflection
