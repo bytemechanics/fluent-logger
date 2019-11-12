@@ -137,7 +137,7 @@ public class LogBean {
 	}
 
 	private static boolean isThrowable(final Object _object){
-		return Throwable.class.isAssignableFrom(_object.getClass());
+		return (_object!=null)&&(Throwable.class.isAssignableFrom(_object.getClass()));
 	}
 	private static Throwable castThrowable(final Object _object){
 		return (Throwable)_object;
