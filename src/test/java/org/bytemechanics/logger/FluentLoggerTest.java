@@ -193,6 +193,34 @@ public class FluentLoggerTest {
 		Assertions.assertEquals("my-logger",logger.loggerAdapter.getName());
 		Assertions.assertEquals("my-logger",logger.getName());
 	}
+
+	
+	@Test
+	@Order(7)
+	@DisplayName("Helper child(String:null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testChild_String_Null(){
+		final FluentLogger parent=FluentLogger.of("my-logger");
+		Assertions.assertThrows(NullPointerException.class,
+								() -> parent.child(null));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper child(String:non-null) must return a fluentlogger instance")
+	public void testChild_String_NonNull(){
+		final FluentLogger parent=FluentLogger.of("my-logger")
+												.prefixed("my-prefix{}")
+												.with("arg1",2);
+		final FluentLogger child=parent.child("my-child")
+												.prefixed("my-prefix2{}")
+												.with(2.2d);
+		Assertions.assertNotNull(child);
+		Assertions.assertEquals("my-logger.my-child",child.loggerAdapter.getName());
+		Assertions.assertEquals("my-logger.my-child",child.getName());
+		Assertions.assertEquals("my-prefix{}my-prefix2{}",child.prefix);
+		Assertions.assertArrayEquals(new Object[]{"arg1",2,2.2d},child.args);
+	}
+
 	@Test
 	@Order(7)
 	@DisplayName("Helper prefixed with null must return an empty prefix")

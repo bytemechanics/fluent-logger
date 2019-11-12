@@ -80,6 +80,16 @@ public final class FluentLogger {
 		return loggerFactory;
 	}
 	
+	/**
+     * Get NEW fluent logger instance with the current logger name suffixed with the given name using the current logger prefixes and arguments
+     * @param _suffix logger name
+     * @return fluent logger instance using the current logger prefixes and arguments
+     */
+    public final FluentLogger child(final String _suffix){
+		if(_suffix==null)
+			throw new NullPointerException("Can not retrieve logger from null _suffix");
+		return new FluentLogger(getLoggerFactory().getLogger(String.join(".",getName(),_suffix)),this.prefix,this.args);
+	}
 	
 	/**
      * Get NEW fluent logger instance with the given name
