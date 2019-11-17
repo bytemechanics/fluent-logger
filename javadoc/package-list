@@ -1,10 +1,10 @@
 org.bytemechanics.logger
-org.bytemechanics.logger.internal
-org.bytemechanics.logger.internal.adapters
-org.bytemechanics.logger.internal.adapters.impl
+org.bytemechanics.logger.adapters
+org.bytemechanics.logger.adapters.impl
+org.bytemechanics.logger.beans
+org.bytemechanics.logger.factory
 org.bytemechanics.logger.internal.commons.functional
 org.bytemechanics.logger.internal.commons.lang
 org.bytemechanics.logger.internal.commons.string
-org.bytemechanics.logger.internal.factory
 org.bytemechanics.logger.internal.factory.impl
 org.bytemechanics.logger.internal.factory.utils
