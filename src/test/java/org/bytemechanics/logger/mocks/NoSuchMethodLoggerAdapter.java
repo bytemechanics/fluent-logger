@@ -16,8 +16,8 @@
 package org.bytemechanics.logger.mocks;
 
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.beans.LogBean;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
 
 /**
  *

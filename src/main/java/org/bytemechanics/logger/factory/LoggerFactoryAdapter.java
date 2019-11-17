@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.factory;
+package org.bytemechanics.logger.factory;
 
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
 
 /**
  * Logger factory adapter
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
 public interface LoggerFactoryAdapter {
     

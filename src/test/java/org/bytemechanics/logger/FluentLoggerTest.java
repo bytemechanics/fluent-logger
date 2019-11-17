@@ -18,6 +18,7 @@ package org.bytemechanics.logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import mockit.Delegate;
@@ -25,11 +26,12 @@ import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
-import org.bytemechanics.logger.internal.adapters.impl.LoggerConsoleImpl;
+import org.bytemechanics.logger.adapters.LoggerAPIProvider;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl;
+import org.bytemechanics.logger.beans.LogBean;
+import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
-import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -100,11 +102,16 @@ public class FluentLoggerTest {
 		System.getProperties().remove(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY);
     }
 	
+	@Injectable
+	String _name="my-loggerName";
 	@Injectable 
-	String prefix="";
+	String _prefix="";
 	@Injectable
 	@Mocked
-	LoggerAdapter loggerAdapter;
+	LoggerAdapter _loggerAdapter;
+	@Injectable
+	@Mocked
+	Function<String,LoggerAdapter> _apiLoggerSupplier;
 	
 	@Test
 	@Order(1)
@@ -157,8 +164,7 @@ public class FluentLoggerTest {
 		Assertions.assertNotSame(instance,actual);
 		Assertions.assertTrue(actual instanceof DummieLoggerFactory);
 	}
-	
-	
+		
 	@Test
 	@Order(7)
 	@DisplayName("Helper of(Class:null) must raise a nullPointerException")
@@ -173,7 +179,7 @@ public class FluentLoggerTest {
 	public void testOf_Class_NonNull(){
 		final FluentLogger logger=FluentLogger.of(FluentLoggerTest.class);
 		Assertions.assertNotNull(logger);
-		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.loggerAdapter.getName());
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
 		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
 	}
 	@Test
@@ -193,7 +199,111 @@ public class FluentLoggerTest {
 		Assertions.assertEquals("my-logger",logger.loggerAdapter.getName());
 		Assertions.assertEquals("my-logger",logger.getName());
 	}
-
+	
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:null,LoggerAPIProvider:non-null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_loggerAPI_Class_Null(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of((Class)null,LoggerAPIProvider.JSR));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:non-null,LoggerAPIProvider:null) must return a fluentlogger instance")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_loggerAPI_null_Class_NonNull(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of(FluentLoggerTest.class,(LoggerAPIProvider)null));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:non-null,LoggerAPIProvider:non-null) must return a fluentlogger instance")
+	public void testOf_loggerAPI_Class_NonNull(){
+		final FluentLogger logger=FluentLogger.of(FluentLoggerTest.class,LoggerAPIProvider.CONSOLE);
+		Assertions.assertNotNull(logger);
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.loggerAdapter.getName());
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
+		Assertions.assertEquals(LoggerConsoleImpl.class,logger.loggerAdapter.getClass());
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:null,Function:non-null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_Function_Class_Null(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of((Class)null,name -> new LoggerConsoleImpl(name)));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:non-null,Function:null) must return a fluentlogger instance")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_Function_null_Class_NonNull(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of(FluentLoggerTest.class,(Function<String,LoggerAdapter>)null));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(Class:non-null,Function:non-null) must return a fluentlogger instance")
+	public void testOf_Function_Class_NonNull(){
+		final FluentLogger logger=FluentLogger.of(FluentLoggerTest.class,name -> new LoggerConsoleImpl(name));
+		Assertions.assertNotNull(logger);
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.loggerAdapter.getName());
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
+		Assertions.assertEquals(LoggerConsoleImpl.class,logger.loggerAdapter.getClass());
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:null,LoggerAPIProvider:non-null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_loggerAPI_String_Null(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of((String)null,LoggerAPIProvider.JSR));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:non-null,LoggerAPIProvider:null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_loggerAPI_null_String_NonNull(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of("my-logger",(LoggerAPIProvider)null));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:non-null,LoggerAPIProvider:non-null) must return a fluentlogger instance")
+	public void testOf_loggerAPI_String_NonNull(){
+		final FluentLogger logger=FluentLogger.of("my-logger",LoggerAPIProvider.CONSOLE);
+		Assertions.assertNotNull(logger);
+		Assertions.assertEquals("my-logger",logger.loggerAdapter.getName());
+		Assertions.assertEquals("my-logger",logger.getName());
+		Assertions.assertEquals(LoggerConsoleImpl.class,logger.loggerAdapter.getClass());
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:null,Function:non-null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_Function_String_Null(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of((String)null,name -> new LoggerConsoleImpl(name)));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:non-null,Function:null) must raise a nullPointerException")
+	@SuppressWarnings("ThrowableResultIgnored")
+	public void testOf_Function_null_String_NonNull(){
+		Assertions.assertThrows(NullPointerException.class,
+								() -> FluentLogger.of("my-logger",(Function<String,LoggerAdapter>)null));
+	}
+	@Test
+	@Order(7)
+	@DisplayName("Helper of(String:non-null,Function:non-null) must return a fluentlogger instance")
+	public void testOf_Function_String_NonNull(){
+		final FluentLogger logger=FluentLogger.of("my-logger",name -> new LoggerConsoleImpl(name));
+		Assertions.assertNotNull(logger);
+		Assertions.assertEquals("my-logger",logger.loggerAdapter.getName());
+		Assertions.assertEquals("my-logger",logger.getName());
+		Assertions.assertEquals(LoggerConsoleImpl.class,logger.loggerAdapter.getClass());
+	}
 	
 	@Test
 	@Order(7)
@@ -282,8 +392,8 @@ public class FluentLoggerTest {
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(logBean); result=true; times=1;
-			loggerAdapter.log(logBean); times=1;
+			_loggerAdapter.isEnabled(logBean); result=true; times=1;
+			_loggerAdapter.log(logBean); times=1;
 		}};
 		Assertions.assertEquals(_logger,_logger.log(logBean));
 	}
@@ -301,8 +411,8 @@ public class FluentLoggerTest {
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(logBean.getLevel(),_logbean.getLevel());
@@ -323,8 +433,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
@@ -346,8 +456,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
@@ -370,8 +480,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
@@ -393,8 +503,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
@@ -417,8 +527,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
@@ -440,8 +550,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
@@ -464,8 +574,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
@@ -487,8 +597,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
@@ -511,8 +621,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
@@ -534,8 +644,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
@@ -558,8 +668,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
@@ -581,8 +691,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
@@ -605,8 +715,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());
@@ -628,8 +738,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());

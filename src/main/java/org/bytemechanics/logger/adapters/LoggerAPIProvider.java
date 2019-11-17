@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.adapters;
+package org.bytemechanics.logger.adapters;
 
 /**
  * Logger API embeded providers list
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
 public enum LoggerAPIProvider{
 	
 	/** Log4j provider*/
-	LOG4J("org.apache.log4j.Logger","org.bytemechanics.logger.internal.adapters.impl.LoggerLog4jImpl"),
+	LOG4J("org.apache.log4j.Logger","org.bytemechanics.logger.adapters.impl.LoggerLog4jImpl"),
 	/** Log4j2 provider using extension*/
-	LOG4J2E("org.apache.logging.log4j.spi.ExtendedLoggerWrapper","org.bytemechanics.logger.internal.adapters.impl.LoggerLog4j2Extension"),
+	LOG4J2E("org.apache.logging.log4j.spi.ExtendedLoggerWrapper","org.bytemechanics.logger.adapters.impl.LoggerLog4j2Extension"),
 	/** Log4j2 provider*/
-	LOG4J2("org.apache.logging.log4j.Logger","org.bytemechanics.logger.internal.adapters.impl.LoggerLog4j2Impl"),
+	LOG4J2("org.apache.logging.log4j.Logger","org.bytemechanics.logger.adapters.impl.LoggerLog4j2Impl"),
 	/** Java Logging provider*/
-	JSR("java.util.logging.Logger","org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImpl"),
+	JSR("java.util.logging.Logger","org.bytemechanics.logger.adapters.impl.LoggerJSRLoggingImpl"),
+	/** Console provider*/
+	CONSOLE("java.lang.System","org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl"),
 	;
 
 	/** Class to use to detect the API */

@@ -17,13 +17,14 @@ package org.bytemechanics.logger.internal.factory.utils;
 
 import java.lang.reflect.Constructor;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.bytemechanics.logger.internal.adapters.LoggerAPIProvider;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.LoggerAPIProvider;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 
@@ -99,18 +100,34 @@ public class LoggerReflectionUtils{
 	}
 
 	/**
+	 * Build logger factory from the given loggerAPI returning an optional with the function to generate loggerAdapter from the logger name
+	 * @param _loggerAPIProvider the logger api provider to generate the logger
+	 * @return optional with the function to generate loggerAdapter from the logger name
+	 * @see LoggerAPIProvider
+	 * @see LoggerAdapter
+	 */
+	public Optional<Function<String,LoggerAdapter>> getLoggerFactory(final LoggerAPIProvider _loggerAPIProvider){
+		return Optional.ofNullable(_loggerAPIProvider)
+						.map(this::getAPIConstructor)
+						.filter(Objects::nonNull)
+						.map(this::buildFactory);
+	}
+
+	/**
 	 * Get the first a LoggerAdapter lambda provider from string available from LoggerAPIProvider enum values
+	 * @param _loggerAPIProviders stream of logger api providers
 	 * @param _defaultLoggerSupplier default lambda if no API provider found
 	 * @return Function to retrieve LoggerAdapter from a given string logger name
 	 * @see LoggerAPIProvider
+	 * @see LoggerAdapter
 	 */
-	public Function<String,LoggerAdapter> findLoggerFactory(final Supplier<Function<String,LoggerAdapter>> _defaultLoggerSupplier){
-		return Stream.of(LoggerAPIProvider.values())
+	public Function<String,LoggerAdapter> findLoggerFactory(final Stream<LoggerAPIProvider> _loggerAPIProviders,final Supplier<Function<String,LoggerAdapter>> _defaultLoggerSupplier){
+		return _loggerAPIProviders
 						.sequential()
 						.filter(this::existAPI)
-						.map(this::getAPIConstructor)
-						.filter(Objects::nonNull)
-						.map(this::buildFactory)
+						.map(this::getLoggerFactory)
+						.filter(Optional::isPresent)
+						.map(Optional::get)
 						.findFirst()
 							.orElseGet(_defaultLoggerSupplier);
 	}

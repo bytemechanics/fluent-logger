@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal;
+package org.bytemechanics.logger.beans;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,17 +29,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.commons.lang.ArrayUtils;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
-import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
 
 /**
  * Log message bean
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
 public class LogBean {
 

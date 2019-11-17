@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.adapters;
+package org.bytemechanics.logger.adapters;
 
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.LogBean;
+import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Logger adapter to implement to provider lower level API support
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
 public interface LoggerAdapter {
     
