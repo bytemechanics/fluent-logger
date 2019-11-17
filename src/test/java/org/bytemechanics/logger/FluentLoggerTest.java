@@ -102,11 +102,16 @@ public class FluentLoggerTest {
 		System.getProperties().remove(FluentLogger.LOGGER_FACTORY_ADAPTER_KEY);
     }
 	
+	@Injectable
+	String _name="my-loggerName";
 	@Injectable 
-	String prefix="";
+	String _prefix="";
 	@Injectable
 	@Mocked
-	LoggerAdapter loggerAdapter;
+	LoggerAdapter _loggerAdapter;
+	@Injectable
+	@Mocked
+	Function<String,LoggerAdapter> _apiLoggerSupplier;
 	
 	@Test
 	@Order(1)
@@ -174,7 +179,7 @@ public class FluentLoggerTest {
 	public void testOf_Class_NonNull(){
 		final FluentLogger logger=FluentLogger.of(FluentLoggerTest.class);
 		Assertions.assertNotNull(logger);
-		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.loggerAdapter.getName());
+		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
 		Assertions.assertEquals(FluentLoggerTest.class.getName(),logger.getName());
 	}
 	@Test
@@ -387,8 +392,8 @@ public class FluentLoggerTest {
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(logBean); result=true; times=1;
-			loggerAdapter.log(logBean); times=1;
+			_loggerAdapter.isEnabled(logBean); result=true; times=1;
+			_loggerAdapter.log(logBean); times=1;
 		}};
 		Assertions.assertEquals(_logger,_logger.log(logBean));
 	}
@@ -406,8 +411,8 @@ public class FluentLoggerTest {
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(logBean.getLevel(),_logbean.getLevel());
@@ -428,8 +433,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
@@ -451,8 +456,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
@@ -475,8 +480,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
@@ -498,8 +503,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
@@ -522,8 +527,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
@@ -545,8 +550,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
@@ -569,8 +574,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
@@ -592,8 +597,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
@@ -616,8 +621,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
@@ -639,8 +644,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
@@ -663,8 +668,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
@@ -686,8 +691,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
@@ -710,8 +715,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());
@@ -733,8 +738,8 @@ public class FluentLoggerTest {
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
-			loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
-			loggerAdapter.log((LogBean)any);
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_loggerAdapter.log((LogBean)any);
 			result = new Delegate() {
 				void log(LogBean _logbean) {
 					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());
