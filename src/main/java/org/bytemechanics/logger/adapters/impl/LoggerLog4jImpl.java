@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.adapters.impl;
+package org.bytemechanics.logger.adapters.impl;
 
 import java.util.Optional;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.bytemechanics.logger.FluentLogger;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.beans.LogBean;
 
 /**
- * Logger adapter Log4j 2 implementation
- * @see <a href="https://logging.apache.org/log4j/2.x/">https://logging.apache.org/log4j/2.x/</a>
+ * Logger adapter Log4j implementation
+ * @see <a href="https://logging.apache.org/log4j/1.2/">https://logging.apache.org/log4j/1.2/</a>
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
-public class LoggerLog4j2Impl implements LoggerAdapter {
+public class LoggerLog4jImpl implements LoggerAdapter {
 
 	private static final Level[] LEVEL_TRANSLATION = {Level.TRACE, Level.DEBUG, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
@@ -36,10 +36,10 @@ public class LoggerLog4j2Impl implements LoggerAdapter {
 	private final Logger internalLogger;
 
 	
-	public LoggerLog4j2Impl(final String _logName) {
-		this(LogManager.getLogger(_logName));
+	public LoggerLog4jImpl(final String _logName) {
+		this(Logger.getLogger(_logName));
 	}
-	public LoggerLog4j2Impl(final Logger _logger) {
+	public LoggerLog4jImpl(final Logger _logger) {
 		this.internalLogger = _logger;
 	}
 
@@ -56,12 +56,12 @@ public class LoggerLog4j2Impl implements LoggerAdapter {
 	public boolean isEnabled(org.bytemechanics.logger.Level _level) {
 		return Optional.of(_level)
 						.map(this::translateLevel)
-						.map(this.internalLogger::isEnabled)
+						.map(this.internalLogger::isEnabledFor)
 						.orElse(false);
 	}
 	@Override
 	public void log(final LogBean _log) {
 		final Level level=translateLevel(_log.getLevel());
-		this.internalLogger.log(level,_log.getMessage(),_log.getThrowable().orElse(null));
+		this.internalLogger.log(FluentLogger.class.getName(),level,_log.getMessage().get(),_log.getThrowable().orElse(null));
 	}
 }

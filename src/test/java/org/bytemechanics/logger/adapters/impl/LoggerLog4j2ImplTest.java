@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.adapters.impl;
+package org.bytemechanics.logger.adapters.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.LogBean;
+import org.bytemechanics.logger.beans.LogBean;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal;
+package org.bytemechanics.logger.beans;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,7 +70,7 @@ public class LogBeanTest {
 		Assertions.assertEquals(_level,bean.getLevel());
 		Assertions.assertEquals("myMessage arg1 2 arg3 java.io.IOException: MyIOException",bean.getMessage().get());
 		Assertions.assertEquals(time,bean.getTime());
-		Assertions.assertEquals("org.bytemechanics.logger.internal.LogBeanTest",bean.getSource().getClassName());
+		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
 		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
 		Assertions.assertEquals(throwable,bean.getThrowable().get());
 	}
@@ -89,7 +89,7 @@ public class LogBeanTest {
 		Assertions.assertEquals(_level,bean.getLevel());
 		Assertions.assertEquals("myMessage arg1 2 arg3 null",bean.getMessage().get());
 		Assertions.assertEquals(time,bean.getTime());
-		Assertions.assertEquals("org.bytemechanics.logger.internal.LogBeanTest",bean.getSource().getClassName());
+		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
 		Assertions.assertEquals("testBuilderNoStacktrace",bean.getSource().getMethodName());
 		Assertions.assertEquals(Optional.empty(),bean.getThrowable());
 	}	

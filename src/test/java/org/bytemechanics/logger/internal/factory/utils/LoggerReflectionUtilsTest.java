@@ -19,16 +19,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Tested;
-import org.bytemechanics.logger.internal.adapters.LoggerAPIProvider;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
-import org.bytemechanics.logger.internal.adapters.impl.LoggerConsoleImpl;
-import org.bytemechanics.logger.internal.adapters.impl.LoggerJSRLoggingImpl;
+import org.bytemechanics.logger.adapters.LoggerAPIProvider;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl;
+import org.bytemechanics.logger.adapters.impl.LoggerJSRLoggingImpl;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.mocks.NoSuchMethodLoggerAdapter;
@@ -189,12 +191,14 @@ public class LoggerReflectionUtilsTest {
 			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.JSR); result=constructor; times = 1;
 		}};
 		
-		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(LoggerFactoryReflectionImpl::consoleLogger);
+		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(Stream.of(LoggerAPIProvider.values())
+																											.filter(apiProvider -> !LoggerAPIProvider.CONSOLE.equals(apiProvider))
+																									,LoggerFactoryReflectionImpl::consoleLogger);
 
 		Assertions.assertNotNull(loggerFactory);
 		LoggerAdapter logger=loggerFactory.apply("myLog");
 		Assertions.assertNotNull(logger);
-		Assertions.assertTrue(loggerFactory.apply("myLog") instanceof LoggerJSRLoggingImpl);
+		Assertions.assertTrue(logger instanceof LoggerJSRLoggingImpl);
 	}
 
 	@SuppressWarnings("Convert2Lambda")
@@ -213,11 +217,75 @@ public class LoggerReflectionUtilsTest {
 			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.JSR); times = 0;
 		}};
 		
-		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(LoggerFactoryReflectionImpl::consoleLogger);
+		final Function<String,LoggerAdapter> loggerFactory=loggerReflectionUtils.findLoggerFactory(Stream.of(LoggerAPIProvider.values())
+																											.filter(apiProvider -> !LoggerAPIProvider.CONSOLE.equals(apiProvider))
+																									,LoggerFactoryReflectionImpl::consoleLogger);
 
 		Assertions.assertNotNull(loggerFactory);
 		LoggerAdapter logger=loggerFactory.apply("myLog");
 		Assertions.assertNotNull(logger);
-		Assertions.assertTrue(loggerFactory.apply("myLog") instanceof LoggerConsoleImpl);
+		Assertions.assertTrue(logger instanceof LoggerConsoleImpl);
+	}
+
+	@SuppressWarnings("Convert2Lambda")
+	@Test
+	@DisplayName("Logger factory getter success")
+	public void testGetLoggerFactory_success(){
+
+		Constructor<? extends LoggerAdapter> constructor;
+		
+		try{
+			constructor=LoggerJSRLoggingImpl.class.getConstructor(String.class); 
+		}catch(IllegalArgumentException |NoSuchMethodException |SecurityException ex) {
+			throw new RuntimeException(ex);
+		}
+		
+		new Expectations() {{
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J); times = 0;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J2E); times = 0;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J2); times = 0;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.JSR); result=constructor; times = 1;
+		}};
+		
+		final Optional<Function<String,LoggerAdapter>> optionalLoggerFactory=loggerReflectionUtils.getLoggerFactory(LoggerAPIProvider.JSR);
+
+		Assertions.assertNotNull(optionalLoggerFactory);
+		Assertions.assertTrue(optionalLoggerFactory.isPresent());
+		LoggerAdapter logger=optionalLoggerFactory.get().apply("myLog");
+		Assertions.assertNotNull(logger);
+		Assertions.assertTrue(logger instanceof LoggerJSRLoggingImpl);
+	}
+	
+	@SuppressWarnings("Convert2Lambda")
+	@Test
+	@DisplayName("Logger factory getter console")
+	public void testGetLoggerFactory_console(){
+
+		
+		final Optional<Function<String,LoggerAdapter>> optionalLoggerFactory=loggerReflectionUtils.getLoggerFactory(LoggerAPIProvider.CONSOLE);
+
+		Assertions.assertNotNull(optionalLoggerFactory);
+		Assertions.assertTrue(optionalLoggerFactory.isPresent());
+		LoggerAdapter logger=optionalLoggerFactory.get().apply("myLog");
+		Assertions.assertNotNull(logger);
+		Assertions.assertTrue(logger instanceof LoggerConsoleImpl);
+	}
+
+	@SuppressWarnings("Convert2Lambda")
+	@Test
+	@DisplayName("Logger factory getter failure")
+	public void testGetLoggerFactory_failure(){
+
+		new Expectations() {{
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J); times = 0;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J2E); result=null; times = 1;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.LOG4J2); times = 0;
+			loggerReflectionUtils.getAPIConstructor(LoggerAPIProvider.JSR); times = 0;
+		}};
+		
+		final Optional<Function<String,LoggerAdapter>> optionalLoggerFactory=loggerReflectionUtils.getLoggerFactory(LoggerAPIProvider.LOG4J2E);
+
+		Assertions.assertNotNull(optionalLoggerFactory);
+		Assertions.assertFalse(optionalLoggerFactory.isPresent());
 	}
 }

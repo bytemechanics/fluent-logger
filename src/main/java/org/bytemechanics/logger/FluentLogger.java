@@ -16,12 +16,15 @@
 package org.bytemechanics.logger;
 
 import java.util.Optional;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import java.util.function.Function;
+import org.bytemechanics.logger.adapters.LoggerAPIProvider;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.beans.LogBean;
+import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.commons.lang.ArrayUtils;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
-import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
+import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
 
 /**
  * Simple logging system to log to java logging with more user friendly manner
@@ -81,17 +84,6 @@ public final class FluentLogger {
 	}
 	
 	/**
-     * Get NEW fluent logger instance with the current logger name suffixed with the given name using the current logger prefixes and arguments
-     * @param _suffix logger name
-     * @return fluent logger instance using the current logger prefixes and arguments
-     */
-    public final FluentLogger child(final String _suffix){
-		if(_suffix==null)
-			throw new NullPointerException("Can not retrieve logger from null _suffix");
-		return new FluentLogger(getLoggerFactory().getLogger(String.join(".",getName(),_suffix)),this.prefix,this.args);
-	}
-	
-	/**
      * Get NEW fluent logger instance with the given name
      * @param _name logger name
      * @return fluent logger instance
@@ -102,6 +94,35 @@ public final class FluentLogger {
 		return new FluentLogger(getLoggerFactory().getLogger(_name),"");
 	}
 	/**
+     * Get NEW fluent logger instance with the given name
+     * @param _name logger name
+	 * @param _provider logger api provider to use for this logger
+     * @return fluent logger instance
+     */
+    public static final FluentLogger of(final String _name,final LoggerAPIProvider _provider){
+		if(_name==null)
+			throw new NullPointerException("Can not retrieve logger from null name");
+		return Optional.ofNullable(_provider)
+						.flatMap((new LoggerReflectionUtils())::getLoggerFactory)
+						.map(function -> function.apply(_name))
+						.map(loggerAdapter -> new FluentLogger(loggerAdapter,""))
+						.orElseThrow(() -> new NullPointerException("Can not retrieve logger from null provider"));
+	}	
+	/**
+     * Get NEW fluent logger instance with the given name
+     * @param _name logger name
+	 * @param _apiLoggerSupplier function to provider an api logger instance from the given name
+     * @return fluent logger instance
+     */
+    public static final FluentLogger of(final String _name,final Function<String,LoggerAdapter> _apiLoggerSupplier){
+		if(_name==null)
+			throw new NullPointerException("Can not retrieve logger from null name");
+		return Optional.ofNullable(_apiLoggerSupplier)
+						.map(function -> function.apply(_name))
+						.map(loggerAdapter -> new FluentLogger(loggerAdapter,""))
+						.orElseThrow(() -> new NullPointerException("Can not retrieve logger from null apiLoggerSupplier"));
+	}	
+	/**
      * Get NEW fluent logger instance from class canonincal name
      * @param _class from extract the logger instance
      * @return fluent logger instance
@@ -111,6 +132,48 @@ public final class FluentLogger {
 			throw new NullPointerException("Can not retrieve logger from null class");
 		return new FluentLogger(getLoggerFactory().getLogger(_class.getName()),"");
 	}
+	/**
+     * Get NEW fluent logger instance from class canonincal name
+     * @param _class from extract the logger instance
+     * @param _provider logger api provider to use for this logger
+     * @return fluent logger instance
+     */
+    public static final FluentLogger of(final Class<?> _class,final LoggerAPIProvider _provider){
+		if(_class==null)
+			throw new NullPointerException("Can not retrieve logger from null class");
+		System.out.println("my function"+(new LoggerReflectionUtils()).getLoggerFactory(_provider));
+		return Optional.ofNullable(_provider)
+						.flatMap((new LoggerReflectionUtils())::getLoggerFactory)
+						.map(function -> function.apply(_class.getName()))
+						.map(loggerAdapter -> new FluentLogger(loggerAdapter,""))
+						.orElseThrow(() -> new NullPointerException("Can not retrieve logger from null provider"));
+	}	
+	/**
+     * Get NEW fluent logger instance from class canonincal name
+     * @param _class from extract the logger instance
+     * @param _apiLoggerSupplier function to provider an api logger instance from the given class name
+     * @return fluent logger instance
+     */
+    public static final FluentLogger of(final Class<?> _class,final Function<String,LoggerAdapter> _apiLoggerSupplier){
+		if(_class==null)
+			throw new NullPointerException("Can not retrieve logger from null class");
+		return Optional.ofNullable(_apiLoggerSupplier)
+						.map(function -> function.apply(_class.getName()))
+						.map(loggerAdapter -> new FluentLogger(loggerAdapter,""))
+						.orElseThrow(() -> new NullPointerException("Can not retrieve logger from null apiLoggerSupplier"));
+	}	
+	
+	/**
+     * Get NEW fluent logger instance with the current logger name suffixed with the given name using the current logger prefixes and arguments
+     * @param _suffix logger name
+     * @return fluent logger instance using the current logger prefixes and arguments
+     */
+    public final FluentLogger child(final String _suffix){
+		if(_suffix==null)
+			throw new NullPointerException("Can not retrieve logger from null _suffix");
+		return new FluentLogger(getLoggerFactory().getLogger(String.join(".",getName(),_suffix)),this.prefix,this.args);
+	}
+
 	/**
      * Get NEW fluent logger instance with the given name, adds the _prefix to any message
      * @param _prefix prefix to append at the begining of any message writen to this log and after any previous prefix at this logger

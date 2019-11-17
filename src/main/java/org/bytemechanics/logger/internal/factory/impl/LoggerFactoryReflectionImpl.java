@@ -16,9 +16,11 @@
 package org.bytemechanics.logger.internal.factory.impl;
 
 import java.util.function.Function;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
-import org.bytemechanics.logger.internal.adapters.impl.LoggerConsoleImpl;
-import org.bytemechanics.logger.internal.factory.LoggerFactoryAdapter;
+import java.util.stream.Stream;
+import org.bytemechanics.logger.adapters.LoggerAPIProvider;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl;
+import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
 
 /**
@@ -33,7 +35,9 @@ public class LoggerFactoryReflectionImpl implements LoggerFactoryAdapter{
 	
 	public LoggerFactoryReflectionImpl(){
 		this(new LoggerReflectionUtils()
-					.findLoggerFactory(LoggerFactoryReflectionImpl::consoleLogger));
+					.findLoggerFactory(Stream.of(LoggerAPIProvider.values())
+												.filter(apiProvider -> !LoggerAPIProvider.CONSOLE.equals(apiProvider))
+										,LoggerFactoryReflectionImpl::consoleLogger));
 	}
 	public LoggerFactoryReflectionImpl(final Function<String,LoggerAdapter> _loggerFactory){
 		this.loggerFactory=_loggerFactory;

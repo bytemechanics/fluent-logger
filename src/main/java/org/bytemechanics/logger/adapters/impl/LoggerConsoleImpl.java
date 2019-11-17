@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bytemechanics.logger.internal.adapters.impl;
+package org.bytemechanics.logger.adapters.impl;
 
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.LogBean;
-import org.bytemechanics.logger.internal.adapters.LoggerAdapter;
+import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.beans.LogBean;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 
 /**
  * Standard output logger adapter (intended to use only as backup)
  * @author afarre
- * @since 2.0.0
+ * @since 2.1.0
  */
 public class LoggerConsoleImpl implements LoggerAdapter {
 
