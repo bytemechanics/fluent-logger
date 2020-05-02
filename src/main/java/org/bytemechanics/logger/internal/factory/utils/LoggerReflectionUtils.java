@@ -67,7 +67,7 @@ public class LoggerReflectionUtils{
 		Constructor<T> reply=null;
 		
 		try {
-			final Class<T> loggerAdapterClass=(Class<T>)_api.getImplementationClass();
+			final Class<T> loggerAdapterClass=_api.getImplementationClass();
 			if(!LoggerAdapter.class.isAssignableFrom(loggerAdapterClass))
 				throw new ClassCastException(SimpleFormat.format("Class {} does not implement {}",loggerAdapterClass,LoggerAdapter.class));
 			reply=loggerAdapterClass.getConstructor(String.class);
