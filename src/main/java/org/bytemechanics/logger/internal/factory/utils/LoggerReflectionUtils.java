@@ -61,6 +61,7 @@ public class LoggerReflectionUtils{
 	 * @return String parameterized constructor of the implementation class if exist null otherwise
 	 * @see LoggerAPIProvider#getImplementationClass() 
 	 */
+	@SuppressWarnings("unchecked")
 	protected <T extends LoggerAdapter> Constructor<T> getAPIConstructor(final LoggerAPIProvider _api){
 		
 		Constructor<T> reply=null;

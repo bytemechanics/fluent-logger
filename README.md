@@ -10,6 +10,7 @@ Simple logging abstraction with standard java logging system
 Simplify parameter replacement in logging messages in order to avoid message processing if logger is not enabled
 
 ## Quick start
+(Please read our [Javadoc](https://fluent-logger.bytemechanics.org/javadoc/index.html) for further information)
 1. First of all include the Jar file in your compile and execution classpath.
 **Maven**
 ```Maven

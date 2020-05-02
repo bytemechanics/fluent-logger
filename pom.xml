@@ -4,14 +4,14 @@
     <parent>
         <groupId>org.bytemechanics</groupId>
         <artifactId>bytemechanics-maven</artifactId>
-        <version>2.0.1</version>
+        <version>2.2.0</version>
     </parent>
     <artifactId>fluent-logger</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <name>Fluent Logger</name>
     <description>Simple logging abstraction with standard java logging system</description>
-    <url>http://www.bytemechanics.org</url>
+    <url>https://fluent-logger.bytemechanics.org</url>
     <organization>
         <name>Byte Mechanics</name>
         <url>http://www.bytemechanics.org</url>
@@ -73,7 +73,7 @@
                         <configuration>
                             <copies>
                                 <copy>
-                                    <artifact>${project.groupId}:copy-commons:1.4.1</artifact>
+                                    <artifact>${project.groupId}:copy-commons:1.5.1</artifact>
                                     <classes>
                                         <class>org.bytemechanics.commons.string.SimpleFormat</class>
                                         <class>org.bytemechanics.commons.lang.ArrayUtils</class>
@@ -87,6 +87,32 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Export-Package>
+							!org.bytemechanics.logger.internal.factory.impl.*,
+							!org.bytemechanics.logger.internal.factory.utils.*,
+							!org.bytemechanics.logger.internal.commons.string.*,
+							!org.bytemechanics.logger.internal.commons.lang.*,
+							!org.bytemechanics.logger.internal.commons.functional.*,
+							org.bytemechanics.logger.*;version=${project.version};-noimport:=true,
+						</Export-Package>
+						<Bundle-DocURL>https://fluent-logger.bytemechanics.org/javadoc/index.html</Bundle-DocURL>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
     </build>
 </project>
