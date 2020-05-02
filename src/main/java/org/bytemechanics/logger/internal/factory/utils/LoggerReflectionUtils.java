@@ -61,12 +61,13 @@ public class LoggerReflectionUtils{
 	 * @return String parameterized constructor of the implementation class if exist null otherwise
 	 * @see LoggerAPIProvider#getImplementationClass() 
 	 */
+	@SuppressWarnings("unchecked")
 	protected <T extends LoggerAdapter> Constructor<T> getAPIConstructor(final LoggerAPIProvider _api){
 		
 		Constructor<T> reply=null;
 		
 		try {
-			final Class<T> loggerAdapterClass=(Class<T>)_api.getImplementationClass();
+			final Class<T> loggerAdapterClass=_api.getImplementationClass();
 			if(!LoggerAdapter.class.isAssignableFrom(loggerAdapterClass))
 				throw new ClassCastException(SimpleFormat.format("Class {} does not implement {}",loggerAdapterClass,LoggerAdapter.class));
 			reply=loggerAdapterClass.getConstructor(String.class);

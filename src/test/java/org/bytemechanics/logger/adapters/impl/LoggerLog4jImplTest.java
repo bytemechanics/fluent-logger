@@ -26,7 +26,6 @@ import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.apache.log4j.Priority;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.beans.LogBean;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
@@ -117,7 +116,7 @@ public class LoggerLog4jImplTest {
 			underlayingLogger.isEnabledFor((org.apache.log4j.Level)any); 
 				result=new Delegate<org.apache.log4j.Level>() {
 							public boolean delegate(org.apache.log4j.Level _receivedLevel) throws Exception {
-								return (_receivedLevel.isGreaterOrEqual(Priority.DEBUG));
+								return (_receivedLevel.isGreaterOrEqual(org.apache.log4j.Level.DEBUG));
 							}
 						};
 				times=1;

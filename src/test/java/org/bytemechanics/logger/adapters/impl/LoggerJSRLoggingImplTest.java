@@ -136,6 +136,7 @@ public class LoggerJSRLoggingImplTest {
 	}
 	@ParameterizedTest(name ="Log logBean={0} should write log={1}")
 	@MethodSource("logDatapack")
+	@SuppressWarnings("unchecked")
 	public void testLog(final LogBean _log){
 
 		final java.util.logging.Level translatedLevel=logger.translateLevel(_log.getLevel());

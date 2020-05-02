@@ -62,6 +62,7 @@ public final class FluentLogger {
 	 * @return the default LoggerFactoryAdapter instance or the configured as system property buy LOGGER_FACTORY_ADAPTER_KEY
 	 * @see FluentLogger#LOGGER_FACTORY_ADAPTER_KEY
 	 */
+	@SuppressWarnings("unchecked")
 	protected static LoggerFactoryAdapter getLoggerFactory(){
 
 		Optional.ofNullable(LOGGER_FACTORY_ADAPTER_KEY)
