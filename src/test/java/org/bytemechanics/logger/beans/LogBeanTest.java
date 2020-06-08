@@ -15,6 +15,7 @@
  */
 package org.bytemechanics.logger.beans;
 
+import org.bytemechanics.logger.adapters.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -25,7 +26,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ public class LogBeanTest {
 	@BeforeAll
 	public static void setup() throws IOException{
 		System.out.println(">>>>> LogBeanTest >>>> setupSpec");
-		try(InputStream inputStream = LambdaUnchecker.class.getResourceAsStream("/logging.properties")){
+		try(InputStream inputStream = LogBean.class.getResourceAsStream("/logging.properties")){
 			LogManager.getLogManager().readConfiguration(inputStream);
 		}catch (final IOException e){
 			Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
@@ -61,7 +61,7 @@ public class LogBeanTest {
 		
 		final IOException throwable=new IOException("MyIOException");
 		final LocalDateTime time=LocalDateTime.now();
-		LogBean bean=LogBean.of(_level)
+		Log bean=LogBean.of(_level)
 							.message("myMessage {} {} {} {}")
 							.args("arg1",2)
 							.args("arg3")
@@ -81,7 +81,7 @@ public class LogBeanTest {
 	public void testBuilderNoStacktrace(final Level _level){
 		
 		final LocalDateTime time=LocalDateTime.now();
-		LogBean bean=LogBean.of(_level)
+		Log bean=LogBean.of(_level)
 							.message("myMessage {} {} {} {}")
 							.args("arg1",2)
 							.args("arg3")
@@ -98,7 +98,7 @@ public class LogBeanTest {
 	public void testGetSourceWithSkippedClasses(){
 		
 		final LocalDateTime time=LocalDateTime.now();
-		LogBean bean=LogBean.of(Level.ERROR)
+		Log bean=LogBean.of(Level.ERROR)
 							.message("myMessage {} {} {} {}")
 							.args("arg1",2)
 							.args("arg3")
@@ -112,7 +112,7 @@ public class LogBeanTest {
 	public void testGetSourceWithNoMatch(){
 		
 		final LocalDateTime time=LocalDateTime.now();
-		LogBean bean=LogBean.of(Level.ERROR)
+		Log bean=LogBean.of(Level.ERROR)
 							.message("myMessage {} {} {} {}")
 							.args("arg1",2)
 							.args("arg3")

@@ -28,8 +28,9 @@ import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.beans.LogBean;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.internal.commons.functional.LambdaUnchecker;
+import org.bytemechanics.logger.beans.LogBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -137,7 +138,7 @@ public class LoggerJSRLoggingImplTest {
 	@ParameterizedTest(name ="Log logBean={0} should write log={1}")
 	@MethodSource("logDatapack")
 	@SuppressWarnings("unchecked")
-	public void testLog(final LogBean _log){
+	public void testLog(final Log _log){
 
 		final java.util.logging.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		if(_log.getThrowable().isPresent()){

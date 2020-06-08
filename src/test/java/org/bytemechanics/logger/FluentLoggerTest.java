@@ -27,6 +27,7 @@ import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAPIProvider;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
 import org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl;
@@ -387,12 +388,12 @@ public class FluentLoggerTest {
 	@Test
 	@Order(8)
 	@DisplayName("Log lobBean should be cascaded to loggerAdapter.log(logBean)")
-	public void testLog_LogBean(@Tested FluentLogger _logger){
+	public void testLog_Log(@Tested FluentLogger _logger){
 		
 		final String message="my-message({},{},{},{})";
 		final Object[] messageArguments=new Object[]{"myparg1",null,"myparg2",2,3,5};
 		
-		final LogBean logBean=LogBean.of(Level.TRACE)
+		final Log logBean=LogBean.of(Level.TRACE)
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
@@ -428,6 +429,33 @@ public class FluentLoggerTest {
 		Assertions.assertEquals(_logger,_logger.log(Level.TRACE, message, messageArguments));
 	}
 
+	@Test
+	@Order(8)
+	@DisplayName("Log message with supplier call to loggerAdapter.log(logBean) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testLog_Supplier(@Tested @Mocked FluentLogger _logger){
+		
+		final String prefix="my-message({},{},{},{})";
+		final Object[] prefixArgs=new Object[]{"myparg1",null,"myparg2",2,3,5};
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_logger.getPrefix(); result=prefix;
+			_logger.getArgs(); result=prefixArgs;
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+			_loggerAdapter.log((Log)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(_logger,_logger.log(Level.TRACE, ()-> message, cause));
+	}
+	
 	@Test
 	@Order(9)
 	@DisplayName("Finest with throwable should log an empty message with an argument with an exception")

@@ -132,4 +132,22 @@ public class LoggerReflectionUtils{
 						.findFirst()
 							.orElseGet(_defaultLoggerSupplier);
 	}
+
+	/**
+	 * Determine if the object is a Throwable instance
+	 * @param _object object to check
+	 * @return true if is a Throwable instance
+	 */
+	public static boolean isThrowable(final Object _object){
+		return (_object!=null)&&(Throwable.class.isAssignableFrom(_object.getClass()));
+	}
+
+	/**
+	 * Cast to throwable
+	 * @param _object object to cast
+	 * @return the same object cast as throwable
+	 */
+	public static Throwable castThrowable(final Object _object){
+		return (Throwable)_object;
+	}
 }
