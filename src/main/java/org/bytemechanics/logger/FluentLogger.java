@@ -234,6 +234,66 @@ public final class FluentLogger {
 		return this.loggerAdapter.getName();
 	}
 
+	
+	/**
+	 * Returns the status of the current log for the given level
+	 * @param _level 
+	 * @return true if the _level is enabled, false otherwise
+	 */
+    public boolean isEnabled(final Level _level){
+		return this.loggerAdapter.isEnabled(_level);
+	}
+	
+	/**
+	 * Returns the status of the current log for Level FINEST
+	 * @return true if FINEST is enabled, false otherwise
+	 */
+	public boolean isFinestEnabled(){
+		return isEnabled(Level.FINEST);
+	}
+	/**
+	 * Returns the status of the current log for Level TRACE
+	 * @return true if TRACE is enabled, false otherwise
+	 */
+	public boolean isTraceEnabled(){
+		return isEnabled(Level.TRACE);
+	}
+	/**
+	 * Returns the status of the current log for Level DEBUG
+	 * @return true if DEBUG is enabled, false otherwise
+	 */
+	public boolean isDebugEnabled(){
+		return isEnabled(Level.DEBUG);
+	}
+	/**
+	 * Returns the status of the current log for Level INFO
+	 * @return true if INFO is enabled, false otherwise
+	 */
+	public boolean isInfoEnabled(){
+		return isEnabled(Level.INFO);
+	}
+	/**
+	 * Returns the status of the current log for Level WARNING
+	 * @return true if WARNING is enabled, false otherwise
+	 */
+	public boolean isWarningEnabled(){
+		return isEnabled(Level.WARNING);
+	}
+	/**
+	 * Returns the status of the current log for Level ERROR
+	 * @return true if ERROR is enabled, false otherwise
+	 */
+	public boolean isErrorEnabled(){
+		return isEnabled(Level.ERROR);
+	}
+	/**
+	 * Returns the status of the current log for Level CRITICAL
+	 * @return true if CRITICAL is enabled, false otherwise
+	 */
+	public boolean isCriticalEnabled(){
+		return isEnabled(Level.CRITICAL);
+	}
+	
 	/**
 	 * Log the given _exception to a finest level
 	 * @param _exception exception to log
@@ -359,4 +419,6 @@ public final class FluentLogger {
      public FluentLogger critical(final String _message, final Object... _args) {
         return log(Level.CRITICAL, _message, _args);
     }
+
+
 }
