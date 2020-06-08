@@ -774,6 +774,7 @@ public class FluentLoggerTest {
 							Arguments.of(Level.CRITICAL,false)
 						);
 	}
+	@Order(10)
 	@ParameterizedTest(name="Helper isEnabled({0}) must return a {1}")
 	@MethodSource("enabledDatapack")
 	public void testIsEnabled(final Level _level,final boolean _expected,@Tested FluentLogger _logger){
@@ -783,5 +784,160 @@ public class FluentLoggerTest {
 		}};
 
 		Assertions.assertEquals(_expected,_logger.isEnabled(_level));
+	}
+
+	@Test
+	@Order(11)
+	@DisplayName("Call isFinestEnabled when finest is enabled should return true")
+	public void testIsFinestEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isFinestEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isFinestEnabled when finest is not enabled should return false")
+	public void testIsFinestEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.FINEST); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isFinestEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isTraceEnabled when Trace is enabled should return true")
+	public void testIsTraceEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isTraceEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isTraceEnabled when Trace is not enabled should return false")
+	public void testIsTraceEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.TRACE); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isTraceEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isDebugEnabled when Debug is enabled should return true")
+	public void testIsDebugEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isDebugEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isDebugEnabled when Debug is not enabled should return false")
+	public void testIsDebugEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.DEBUG); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isDebugEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isInfoEnabled when Info is enabled should return true")
+	public void testIsInfoEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isInfoEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isInfoEnabled when Info is not enabled should return false")
+	public void testIsInfoEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.INFO); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isInfoEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isWarningEnabled when Warning is enabled should return true")
+	public void testIsWarningEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isWarningEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isWarningEnabled when Warning is not enabled should return false")
+	public void testIsWarningEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.WARNING); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isWarningEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isErrorEnabled when Error is enabled should return true")
+	public void testIsErrorEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isErrorEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isErrorEnabled when Error is not enabled should return false")
+	public void testIsErrorEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.ERROR); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isErrorEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isCriticalEnabled when critical is enabled should return true")
+	public void testIsCriticalEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isCriticalEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isCriticalEnabled when critical is not enabled should return false")
+	public void testIsCriticalEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isCriticalEnabled());
 	}
 }
