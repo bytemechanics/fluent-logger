@@ -70,6 +70,8 @@ public final class FluentLogger {
 
 		Optional.ofNullable(LOGGER_FACTORY_ADAPTER_KEY)
 				.map(System::getProperty)
+				.map(String::trim)
+				.map(className -> (className.isEmpty())?  "org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl": className )
 				.filter(className -> !loggerFactory.getClass().getName().equals(className))
 				.ifPresent(className -> {
 					synchronized(FluentLogger.class){

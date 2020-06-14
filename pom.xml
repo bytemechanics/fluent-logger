@@ -57,6 +57,13 @@
             <scope>provided</scope>
 			<optional>true</optional>
         </dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>3.6.3</version>
+            <scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
     </dependencies>
 
     <build>

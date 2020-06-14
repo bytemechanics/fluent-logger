@@ -4,7 +4,9 @@ Utility minor enhancements to optimize CPU consumption on log generation
 
 ## Changes
 * Done Feature: Add level enabled function to check if a certain level is enabled from the FluentLogger 
-
+* Done Feature: Add message supplier method in all log levels
+* Done Feature: Add support for Maven plugin logs
+* Now if you want to return to the original logger factury only need to add property LOGGER_FACTORY_ADAPTER_KEY with an empty string
 
 # Version 2.1.1
 ---
