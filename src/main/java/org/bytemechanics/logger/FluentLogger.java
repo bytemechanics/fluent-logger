@@ -48,7 +48,7 @@ public final class FluentLogger {
 	protected final String prefix;
     protected final Object[] args;
 
-    private FluentLogger(final Function<String,LoggerAdapter> _apiLoggerSupplier,final String _name, final String _prefix, final Object... _args) {
+    protected FluentLogger(final Function<String,LoggerAdapter> _apiLoggerSupplier,final String _name, final String _prefix, final Object... _args) {
 		this(_apiLoggerSupplier, _apiLoggerSupplier.apply(_name), _name, _prefix, _args);
     }
     private FluentLogger(final Function<String,LoggerAdapter> _apiLoggerSupplier,LoggerAdapter _loggerAdapter,final String _name, final String _prefix, final Object... _args) {
@@ -346,6 +346,24 @@ public final class FluentLogger {
 		return log(Level.FINEST, "", _exception);
     }
 	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger finest(final Supplier<String> _messageSupplier) {
+		return log(Level.FINEST,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger finest(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.FINEST,_messageSupplier,_exception);
+    }
+	/**
 	 * Log the given _message and _args to a finest level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -362,6 +380,24 @@ public final class FluentLogger {
 	 */
     public FluentLogger trace(final Throwable _exception) {
 		return log(Level.TRACE, "", _exception);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger trace(final Supplier<String> _messageSupplier) {
+		return log(Level.TRACE,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger trace(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.TRACE,_messageSupplier,_exception);
     }
 	/**
 	 * Log the given _message and _args to a trace level
@@ -382,6 +418,24 @@ public final class FluentLogger {
 		return log(Level.DEBUG, "", _exception);
     }
 	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger debug(final Supplier<String> _messageSupplier) {
+		return log(Level.DEBUG,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger debug(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.DEBUG,_messageSupplier,_exception);
+    }
+	/**
 	 * Log the given _message and _args to a debug level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -400,6 +454,24 @@ public final class FluentLogger {
 		return log(Level.INFO, "", _exception);
     }
 	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger info(final Supplier<String> _messageSupplier) {
+		return log(Level.INFO,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger info(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.INFO,_messageSupplier,_exception);
+    }
+	/**
 	 * Log the given _message and _args to a info level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -414,8 +486,26 @@ public final class FluentLogger {
 	 * @param _exception exception to log
 	 * @return this logger
 	 */
-   public FluentLogger warning(final Throwable _exception) {
+	public FluentLogger warning(final Throwable _exception) {
 		return log(Level.WARNING, "", _exception);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger warning(final Supplier<String> _messageSupplier) {
+		return log(Level.WARNING,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger warning(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.WARNING,_messageSupplier,_exception);
     }
 	/**
 	 * Log the given _message and _args to a warning level
@@ -436,6 +526,24 @@ public final class FluentLogger {
 		return log(Level.ERROR, "", _exception);
     }
 	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger error(final Supplier<String> _messageSupplier) {
+		return log(Level.ERROR,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger error(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.ERROR,_messageSupplier,_exception);
+    }
+	/**
 	 * Log the given _message and _args to a error level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -454,6 +562,24 @@ public final class FluentLogger {
 		return log(Level.CRITICAL, "", _exception);
     }
 	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger critical(final Supplier<String> _messageSupplier) {
+		return log(Level.CRITICAL,_messageSupplier,null);
+    }
+	/**
+	 * Log the given _exception to a finest level
+	 * @param _exception exception to log
+	 * @param _messageSupplier log message supplier
+	 * @return this logger
+	 */
+	public FluentLogger critical(final Throwable _exception,final Supplier<String> _messageSupplier) {
+		return log(Level.CRITICAL,_messageSupplier,_exception);
+    }
+	/**
 	 * Log the given _message and _args to a critical level
 	 * @param _message log message
 	 * @param _args log replacement arguments with the pattern '{}'
@@ -462,6 +588,4 @@ public final class FluentLogger {
      public FluentLogger critical(final String _message, final Object... _args) {
         return log(Level.CRITICAL, _message, _args);
     }
-
-
 }
