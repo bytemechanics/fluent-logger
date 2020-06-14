@@ -16,7 +16,6 @@
 package org.bytemechanics.logger.adapters;
 
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Logger adapter to implement to provider lower level API support
@@ -43,13 +42,13 @@ public interface LoggerAdapter {
 	 * @return true if this _log level is enabled in the underlying API
 	 * @see LoggerAdapter#isEnabled(org.bytemechanics.logger.Level) 
 	 */
-    public default boolean isEnabled(final LogBean _log){
+    public default boolean isEnabled(final Log _log){
 		return this.isEnabled(_log.getLevel());
 	}
 	
 	/**
 	 * Send the given _log to the underlying API
-	 * @param _log the LogBean representing the log
+	 * @param _log the LogAdapter representing the log
 	 */
-    public void log(final LogBean _log);
+    public void log(final Log _log);
 }

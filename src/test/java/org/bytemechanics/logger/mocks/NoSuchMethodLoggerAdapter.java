@@ -16,7 +16,7 @@
 package org.bytemechanics.logger.mocks;
 
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.beans.LogBean;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
 
 /**
@@ -31,7 +31,7 @@ public class NoSuchMethodLoggerAdapter implements LoggerAdapter{
 	}
 
 	@Override
-	public void log(LogBean _logBean) {
+	public void log(Log _logBean) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 

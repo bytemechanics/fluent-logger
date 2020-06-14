@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
-import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Standard java logging API implementation
@@ -66,7 +66,7 @@ public class LoggerJSRLoggingImpl implements LoggerAdapter {
 						.orElse(false);
 	}
 	@Override
-	public void log(final LogBean _log) {
+	public void log(final Log _log) {
 		final StackTraceElement stack=_log.getSource(SKIPPED_CLASS_NAMES);
 		final Level level=translateLevel(_log.getLevel());
 		this.internalLogger.logp(level,stack.getClassName(),stack.getMethodName(),_log.getThrowable().orElse(null),_log.getMessage());

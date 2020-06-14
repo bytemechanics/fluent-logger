@@ -22,8 +22,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
 import org.bytemechanics.logger.FluentLogger;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
-import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Logger adapter Log4j 2 alternative implementation using log4j2 extensions
@@ -54,7 +54,7 @@ public class LoggerLog4j2Extension extends ExtendedLoggerWrapper implements Logg
 						.orElse(false);
 	}
 	@Override
-	public void log(final LogBean _log) {
+	public void log(final Log _log) {
 		final Level level=translateLevel(_log.getLevel());
 		logIfEnabled(FluentLogger.class.getName(),level,null,_log.getMessage(),_log.getThrowable().orElse(null));
 	}

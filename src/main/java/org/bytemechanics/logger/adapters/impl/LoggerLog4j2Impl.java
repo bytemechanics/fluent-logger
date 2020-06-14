@@ -19,8 +19,8 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
-import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Logger adapter Log4j 2 implementation
@@ -60,7 +60,7 @@ public class LoggerLog4j2Impl implements LoggerAdapter {
 						.orElse(false);
 	}
 	@Override
-	public void log(final LogBean _log) {
+	public void log(final Log _log) {
 		final Level level=translateLevel(_log.getLevel());
 		this.internalLogger.log(level,_log.getMessage(),_log.getThrowable().orElse(null));
 	}
