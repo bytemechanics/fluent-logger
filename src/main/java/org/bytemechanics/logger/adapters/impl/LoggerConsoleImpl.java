@@ -16,8 +16,8 @@
 package org.bytemechanics.logger.adapters.impl;
 
 import org.bytemechanics.logger.Level;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
-import org.bytemechanics.logger.beans.LogBean;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
 
 /**
@@ -37,7 +37,7 @@ public class LoggerConsoleImpl implements LoggerAdapter {
 		this.logName = _logName;
 	}
 
-	protected String getMessage(final LogBean _log){
+	protected String getMessage(final Log _log){
 		return SimpleFormat.format(PATTERN,_log.getTime(),_log.getLevel().name(),this.logName,_log.getMessage().get());
 	}
 	
@@ -52,7 +52,7 @@ public class LoggerConsoleImpl implements LoggerAdapter {
 	}
 	
 	@Override
-	public void log(final LogBean _log) {
+	public void log(final Log _log) {
 		
 		final String message=getMessage(_log);
 		

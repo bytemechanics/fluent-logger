@@ -18,22 +18,16 @@ package org.bytemechanics.logger.beans;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.adapters.LoggerAdapter;
-import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.internal.commons.lang.ArrayUtils;
 import org.bytemechanics.logger.internal.commons.string.SimpleFormat;
-import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
 
 /**
@@ -41,11 +35,7 @@ import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
  * @author afarre
  * @since 2.1.0
  */
-public class LogBean {
-
-	private static final String UNKNOWN_STACKTRACE = "unknown";
-	private static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(Thread.class.getName(),LogBean.class.getName(),FluentLogger.class.getName(),LoggerFactoryAdapter.class.getName(),LoggerFactoryReflectionImpl.class.getName(),LoggerReflectionUtils.class.getName(),LoggerAdapter.class.getName())
-																	.collect(Collectors.toSet());
+public class LogBean implements Log{
 
 	private final LocalDateTime time;
 	private final Level level;
@@ -53,10 +43,10 @@ public class LogBean {
 	private final List<Object[]> args;
 	
 
-	private LogBean(final Level _level) {
+	protected LogBean(final Level _level) {
 		this(_level,LocalDateTime.now(),new ArrayList<>(),new ArrayList<>());
 	}
-	private LogBean(final Level _level,final LocalDateTime _time,final List<String> _message,final List<Object[]> _args) {
+	protected LogBean(final Level _level,final LocalDateTime _time,final List<String> _message,final List<Object[]> _args) {
 		this.time=_time;
 		this.level=_level;
 		this.message=_message;
@@ -90,24 +80,20 @@ public class LogBean {
 		return new LogBean(this.level, _time, this.message, this.args);
 	}
 
-	/**
-	 * Retrieve the current log time
-	 * @return LocalDateTime
-	 */
+	/** @see Log#getTime() */
+	@Override
 	public LocalDateTime getTime() {
 		return time;
 	}
-	/**
-	 * Retrieve the current log level
-	 * @return Level
-	 */
+	
+	/** @see Log#getLevel() */
+	@Override
 	public Level getLevel() {
 		return level;
 	}
-	/**
-	 * Retrieve supplier for the string message
-	 * @return Supplier that provides the message with the replaced arguments once called
-	 */
+	
+	/** @see Log#getMessage() */
+	@Override
 	public Supplier<String> getMessage() {
 		return () -> SimpleFormat.format(this.message.stream()
 														.collect(Collectors.joining())
@@ -115,46 +101,18 @@ public class LogBean {
 													.reduce(ArrayUtils::concat)
 													.orElse(new Object[0]));
 	}
-	/**
-	 * Retrieve stacktrace element log source
-	 * @return stacktrace element
-	 */
-	public StackTraceElement getSource(){
-		return getSource(Collections.emptySet());
-	}
-	/**
-	 * Retrieve stacktrace element log source skipping the given classes from the recovered stacktrace
-	 * @param _classesToSkip classes to skip from the log stacktrace to reach the correct source
-	 * @return stacktrace element
-	 */
-	public StackTraceElement getSource(final Set<String> _classesToSkip){
-		final Set<String> skippedClasses=new HashSet<>(SKIPPED_CLASS_NAMES);
-		skippedClasses.addAll(_classesToSkip);
-		return Stream.of(Thread.currentThread().getStackTrace())
-								.filter(stack -> !skippedClasses.contains(stack.getClassName()))
-								.findFirst()
-								.orElse(new StackTraceElement(UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, UNKNOWN_STACKTRACE, 0));
-	}
 
-	private static boolean isThrowable(final Object _object){
-		return (_object!=null)&&(Throwable.class.isAssignableFrom(_object.getClass()));
-	}
-	private static Throwable castThrowable(final Object _object){
-		return (Throwable)_object;
-	}
-	/**
-	 * Retrieve an optional of throwable from the previously given arguments
-	 * @return throwable optional
-	 */
+	/** @see Log#getThrowable() */
+	@Override
 	public Optional<Throwable> getThrowable() {
 		return this.args.stream()
 						.flatMap(Stream::of)
-						.filter(LogBean::isThrowable)
-						.map(LogBean::castThrowable)
+						.filter(LoggerReflectionUtils::isThrowable)
+						.map(LoggerReflectionUtils::castThrowable)
 						.findFirst();
 	}
 
-	/**@see Object#hashCode()  */
+	/** @see Object#hashCode()  */
 	@Override
 	public int hashCode() {
 		int hash = 0;

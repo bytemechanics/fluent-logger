@@ -288,4 +288,32 @@ public class LoggerReflectionUtilsTest {
 		Assertions.assertNotNull(optionalLoggerFactory);
 		Assertions.assertFalse(optionalLoggerFactory.isPresent());
 	}
+
+	@Test
+	@DisplayName("Throwable object must answer true to isThrowable")
+	public void testisThrowable_throwable(){
+
+		Assertions.assertTrue(loggerReflectionUtils.isThrowable(new NullPointerException()));
+		Assertions.assertTrue(loggerReflectionUtils.isThrowable(new RuntimeException()));
+		Assertions.assertTrue(loggerReflectionUtils.isThrowable(new IOException()));
+	}
+	@Test
+	@DisplayName("Non-throwable object must answer false to isThrowable")
+	public void testisThrowable_nonThrowable(){
+
+		Assertions.assertFalse(loggerReflectionUtils.isThrowable(this));
+		Assertions.assertFalse(loggerReflectionUtils.isThrowable(String.class));
+		Assertions.assertFalse(loggerReflectionUtils.isThrowable(22));
+	}
+	@Test
+	@DisplayName("Cast throwable must return the same object casted to Throwable")
+	public void testcastThrowable(){
+
+		Object myObject1=new NullPointerException();
+		Assertions.assertEquals((Throwable)myObject1,loggerReflectionUtils.castThrowable(myObject1));
+		Object myObject2=new RuntimeException();
+		Assertions.assertEquals((Throwable)myObject2,loggerReflectionUtils.castThrowable(myObject2));
+		Object myObject3=new IOException();
+		Assertions.assertEquals((Throwable)myObject3,loggerReflectionUtils.castThrowable(myObject3));
+	}
 }

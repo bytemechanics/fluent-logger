@@ -21,11 +21,13 @@ import java.lang.reflect.Method;
 import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
+import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAPIProvider;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
 import org.bytemechanics.logger.adapters.impl.LoggerConsoleImpl;
@@ -43,6 +45,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
 /**
@@ -330,7 +335,7 @@ public class FluentLoggerTest {
 		Assertions.assertEquals("my-prefix{}my-prefix2{}",child.prefix);
 		Assertions.assertArrayEquals(new Object[]{"arg1",2,2.2d},child.args);
 	}
-
+		
 	@Test
 	@Order(7)
 	@DisplayName("Helper prefixed with null must return an empty prefix")
@@ -383,12 +388,12 @@ public class FluentLoggerTest {
 	@Test
 	@Order(8)
 	@DisplayName("Log lobBean should be cascaded to loggerAdapter.log(logBean)")
-	public void testLog_LogBean(@Tested FluentLogger _logger){
+	public void testLog_Log(@Tested FluentLogger _logger){
 		
 		final String message="my-message({},{},{},{})";
 		final Object[] messageArguments=new Object[]{"myparg1",null,"myparg2",2,3,5};
 		
-		final LogBean logBean=LogBean.of(Level.TRACE)
+		final Log logBean=LogBean.of(Level.TRACE)
 										.message(message).args(messageArguments);
 
 		new Expectations(){{
@@ -402,8 +407,9 @@ public class FluentLoggerTest {
 	@Order(8)
 	@DisplayName("Log message with args should be accumulated to and call to loggerAdapter.log(logBean) with the prefixes before")
 	@SuppressWarnings("Convert2Lambda")
-	public void testLog_Message(@Tested FluentLogger _logger){
+	public void testLog_Message(){
 		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"myName","");
 		final String message="my-message({},{},{},{})";
 		final Object[] messageArguments=new Object[]{"myparg1",null,"myparg2",2,3,5};
 		
@@ -421,15 +427,16 @@ public class FluentLoggerTest {
 			 };
 			times=1;
 		}};
-		Assertions.assertEquals(_logger,_logger.log(Level.TRACE, message, messageArguments));
+		Assertions.assertEquals(logger,logger.log(Level.TRACE, message, messageArguments));
 	}
-
+	
 	@Test
 	@Order(9)
 	@DisplayName("Finest with throwable should log an empty message with an argument with an exception")
 	@SuppressWarnings("Convert2Lambda")
-	public void testFinest_throwable(@Tested FluentLogger _logger){
+	public void testFinest_throwable(){
 		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"myName","");
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -445,14 +452,15 @@ public class FluentLoggerTest {
 			 };
 			times=1;
 		}};
-		Assertions.assertEquals(_logger,_logger.finest(e));
+		Assertions.assertEquals(logger,logger.finest(e));
 	}	
 	@Test
 	@Order(9)
 	@DisplayName("Finest with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testFinest_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testFinest_message(){
+		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -475,8 +483,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Trace with throwable should log an empty message with an argument with an exception")
 	@SuppressWarnings("Convert2Lambda")
-	public void testTrace_throwable(@Tested FluentLogger _logger){
+	public void testTrace_throwable(){
 		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","");
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -492,14 +501,15 @@ public class FluentLoggerTest {
 			 };
 			times=1;
 		}};
-		Assertions.assertEquals(_logger,_logger.trace(e));
+		Assertions.assertEquals(logger,logger.trace(e));
 	}	
 	@Test
 	@Order(9)
 	@DisplayName("Trace with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
 	public void testTrace_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -545,8 +555,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Debug with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testDebug_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testDebug_message(){
+		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -592,8 +603,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Info with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testInfo_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testInfo_message(){
+		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -639,8 +651,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Warning with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testWarning_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testWarning_message(){
+
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -686,8 +699,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Error with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testError_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testError_message(){
+
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -733,8 +747,9 @@ public class FluentLoggerTest {
 	@Order(9)
 	@DisplayName("Critical with message and arguments should log the given message with the given prefix and arguments with an exception if present into arguments")
 	@SuppressWarnings("Convert2Lambda")
-	public void testCritical_message(@Tested FluentLogger _logger){
-		final FluentLogger logger=_logger.prefixed("my-prefix[{}-{}]::").with("first","second",999);
+	public void testCritical_message(){
+		
+		final FluentLogger logger=new FluentLogger(name -> _loggerAdapter,"my-name","my-prefix[{}-{}]::","first","second",999);
 		final Throwable e=new Exception("my-error");
 
 		new Expectations(){{
@@ -751,5 +766,565 @@ public class FluentLoggerTest {
 			times=1;
 		}};
 		Assertions.assertEquals(logger,logger.critical("{}-{}Message{}","my","WithArgs",e));
+	}
+
+	static Stream<Arguments> enabledDatapack(){
+		return Stream.of(	Arguments.of(Level.FINEST,true),
+							Arguments.of(Level.FINEST,false),
+							Arguments.of(Level.TRACE,true),
+							Arguments.of(Level.TRACE,false),
+							Arguments.of(Level.DEBUG,true),
+							Arguments.of(Level.DEBUG,false),
+							Arguments.of(Level.INFO,true),
+							Arguments.of(Level.INFO,false),
+							Arguments.of(Level.WARNING,true),
+							Arguments.of(Level.WARNING,false),
+							Arguments.of(Level.DEBUG,true),
+							Arguments.of(Level.DEBUG,false),
+							Arguments.of(Level.CRITICAL,true),
+							Arguments.of(Level.CRITICAL,false)
+						);
+	}
+	@Order(10)
+	@ParameterizedTest(name="Helper isEnabled({0}) must return a {1}")
+	@MethodSource("enabledDatapack")
+	public void testIsEnabled(final Level _level,final boolean _expected,@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(_level); result=_expected; times=1;
+		}};
+
+		Assertions.assertEquals(_expected,_logger.isEnabled(_level));
+	}
+
+	@Test
+	@Order(11)
+	@DisplayName("Call isFinestEnabled when finest is enabled should return true")
+	public void testIsFinestEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.FINEST); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isFinestEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isFinestEnabled when finest is not enabled should return false")
+	public void testIsFinestEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.FINEST); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isFinestEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isTraceEnabled when Trace is enabled should return true")
+	public void testIsTraceEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.TRACE); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isTraceEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isTraceEnabled when Trace is not enabled should return false")
+	public void testIsTraceEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.TRACE); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isTraceEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isDebugEnabled when Debug is enabled should return true")
+	public void testIsDebugEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.DEBUG); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isDebugEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isDebugEnabled when Debug is not enabled should return false")
+	public void testIsDebugEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.DEBUG); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isDebugEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isInfoEnabled when Info is enabled should return true")
+	public void testIsInfoEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.INFO); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isInfoEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isInfoEnabled when Info is not enabled should return false")
+	public void testIsInfoEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.INFO); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isInfoEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isWarningEnabled when Warning is enabled should return true")
+	public void testIsWarningEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.WARNING); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isWarningEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isWarningEnabled when Warning is not enabled should return false")
+	public void testIsWarningEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.WARNING); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isWarningEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isErrorEnabled when Error is enabled should return true")
+	public void testIsErrorEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.ERROR); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isErrorEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isErrorEnabled when Error is not enabled should return false")
+	public void testIsErrorEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.ERROR); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isErrorEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isCriticalEnabled when critical is enabled should return true")
+	public void testIsCriticalEnabled(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=true; times=1;
+		}};
+
+		Assertions.assertEquals(true,_logger.isCriticalEnabled());
+	}
+	@Test
+	@Order(11)
+	@DisplayName("Call isCriticalEnabled when critical is not enabled should return false")
+	public void testIsCriticalEnabled_false(@Tested FluentLogger _logger){
+
+		new Expectations() {{
+			_loggerAdapter.isEnabled(Level.CRITICAL); result=false; times=1;
+		}};
+
+		Assertions.assertEquals(false,_logger.isCriticalEnabled());
+	}
+
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.log(logBean) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testLog_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.TRACE); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.log(Level.TRACE, ()-> message, cause));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.finest(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testFinest_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.FINEST); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.finest(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.finest(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testFinest_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.FINEST); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.FINEST,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.finest(cause,()-> message));
+	}
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.trace(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testTrace_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.TRACE); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.trace(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.trace(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testTrace_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.TRACE); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.TRACE,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.trace(cause,()-> message));
+	}
+	
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.debug(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testDebug_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.debug(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.debug(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testDebug_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.DEBUG); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.DEBUG,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.debug(cause,()-> message));
+	}
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.info(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testInfo_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.INFO); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.info(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.info(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testInfo_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.INFO); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.INFO,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.info(cause,()-> message));
+	}
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.warning(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testWarning_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.WARNING); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.warning(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.warning(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testWarning_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.WARNING); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.WARNING,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.warning(cause,()-> message));
+	}
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.error(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testError_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.ERROR); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.error(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.error(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testError_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.ERROR); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.ERROR,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.error(cause,()-> message));
+	}
+
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.critical(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testCritical_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertFalse(_logbean.getThrowable().isPresent());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.critical(()-> message));
+	}
+	@Test
+	@Order(20)
+	@DisplayName("Log message with supplier call to loggerAdapter.critical(Throable,Supplier) with the prefixes before")
+	@SuppressWarnings("Convert2Lambda")
+	public void testCritical_Throwable_Supplier(@Mocked LoggerAdapter _adapter){
+		
+		final FluentLogger logger=new FluentLogger(name -> _adapter,"myName","my-message({},{},{},{})","myparg1",null,"myparg2",2,3,5);
+
+		final String message="HA!";
+		final Throwable cause=new NullPointerException();
+		
+		new Expectations(){{
+			_adapter.isEnabled(Level.CRITICAL); result=true; times=1;
+			_adapter.log((LogBean)any);
+			result = new Delegate() {
+				void log(Log _logbean) {
+					Assertions.assertEquals(Level.CRITICAL,_logbean.getLevel());
+					Assertions.assertEquals("my-message(myparg1,null,myparg2,2)HA!",_logbean.getMessage().get());
+					Assertions.assertSame(cause,_logbean.getThrowable().get());
+				}
+			 };
+			times=1;
+		}};
+		Assertions.assertEquals(logger,logger.critical(cause,()-> message));
 	}
 }
