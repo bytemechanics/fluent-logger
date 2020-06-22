@@ -28,10 +28,16 @@ public class LoggerMavenPluginImpl implements LoggerAdapter{
 	private final String name;
 	private final org.apache.maven.plugin.logging.Log underlayingLog;
 	
+	
 	public LoggerMavenPluginImpl(final String _name,final org.apache.maven.plugin.logging.Log _log){
 		this.name=_name;
 		this.underlayingLog=_log;
 	}
+
+	public org.apache.maven.plugin.logging.Log getUnderlayingLog() {
+		return underlayingLog;
+	}
+	
 	
 	@Override
 	public String getName() {
@@ -40,14 +46,42 @@ public class LoggerMavenPluginImpl implements LoggerAdapter{
 
 	@Override
 	public boolean isEnabled(final Level _level) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-		//TODO
+		
+		boolean reply;
+		
+		switch(_level){
+			case FINEST:
+			case TRACE:
+			case DEBUG:		reply=this.underlayingLog.isDebugEnabled();
+							break;
+			case INFO:		reply=this.underlayingLog.isInfoEnabled();
+							break;
+			case WARNING:	reply=this.underlayingLog.isWarnEnabled();
+							break;
+			default:		reply=this.underlayingLog.isErrorEnabled();
+		}
+		
+		return reply;
 	}
 
 	@Override
 	public void log(final Log _log) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-		//TODO
+
+		final String message=_log.getMessage()
+									.get();
+		final Throwable exception=_log.getThrowable()
+										.orElse(null);
+
+		switch(_log.getLevel()){
+			case FINEST:
+			case TRACE:
+			case DEBUG:		this.underlayingLog.debug(message,exception);
+							break;
+			case INFO:		this.underlayingLog.info(message,exception);
+							break;
+			case WARNING:	this.underlayingLog.warn(message,exception);
+							break;
+			default:		this.underlayingLog.error(message,exception);
+		}
 	}
-	
 }

@@ -27,13 +27,13 @@ import org.bytemechanics.logger.adapters.impl.LoggerMavenPluginImpl;
  */
 public class LoggerFactoryMavenPluginImpl implements LoggerFactoryAdapter,AutoCloseable{
 
-	private final InheritableThreadLocal<Log> logInstance=new InheritableThreadLocal<>();
+	private static final InheritableThreadLocal<Log> logInstance=new InheritableThreadLocal<>();
 	
 	
 	public LoggerFactoryMavenPluginImpl(){
 	}
 	public LoggerFactoryMavenPluginImpl(final Log _log){
-		System.setProperty(LOGGER_FACTORY_ADAPTER_KEY, "org.bytemechanics.logger.internal.factory.impl.LoggerFactoryMavenPluginImpl");
+		System.setProperty(LOGGER_FACTORY_ADAPTER_KEY, LoggerFactoryMavenPluginImpl.class.getName());
 		this.logInstance.set(_log);
 	}
 	
@@ -44,7 +44,7 @@ public class LoggerFactoryMavenPluginImpl implements LoggerFactoryAdapter,AutoCl
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		logInstance.remove();
 		System.setProperty(LOGGER_FACTORY_ADAPTER_KEY, "");
 	}
