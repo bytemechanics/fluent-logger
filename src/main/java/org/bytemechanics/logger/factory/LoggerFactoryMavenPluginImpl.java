@@ -21,17 +21,34 @@ import org.bytemechanics.logger.adapters.LoggerAdapter;
 import org.bytemechanics.logger.adapters.impl.LoggerMavenPluginImpl;
 
 /**
- * Logger factory maven plugin implementation
+ * Logger factory implementation to use FluentLogger in maven plugin. You must instance as try-with-resource before creating the logger.
+ * <br>
+ * Example:
+ * <code>
+ *		try(LoggerFactoryMavenPluginImpl instance=new LoggerFactoryMavenPluginImpl(_logger)){
+ *			final FluentLogger logger=FluentLogger.of("my-logger")
+ *													.prefixed("my-");
+ *			(...)
+ *		}
+ * </code>
  * @author afarre
- * @since 2.0.0
+ * @since 2.2.0
  */
 public class LoggerFactoryMavenPluginImpl implements LoggerFactoryAdapter,AutoCloseable{
 
 	private static final InheritableThreadLocal<Log> INSTANCE=new InheritableThreadLocal<>();
 	
 	
+	/**
+	 * Constructor to use when already initialized
+	 */
 	public LoggerFactoryMavenPluginImpl(){
 	}
+	/**
+	 * Constructor to use with try-with-resources
+	 * @param _log underlaying logger
+	 * @see org.apache.maven.plugin.logging.Log
+	 */
 	public LoggerFactoryMavenPluginImpl(final Log _log){
 		System.setProperty(LOGGER_FACTORY_ADAPTER_KEY, LoggerFactoryMavenPluginImpl.class.getName());
 		LoggerFactoryMavenPluginImpl.INSTANCE.set(_log);

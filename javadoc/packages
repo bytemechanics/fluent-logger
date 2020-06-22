@@ -1,0 +1,10 @@
+org.bytemechanics.logger.beans
+org.bytemechanics.logger
+org.bytemechanics.logger.factory
+org.bytemechanics.logger.adapters
+org.bytemechanics.logger.adapters.impl
+org.bytemechanics.logger.internal.factory.impl
+org.bytemechanics.logger.internal.factory.utils
+org.bytemechanics.logger.internal.commons.string
+org.bytemechanics.logger.internal.commons.functional
+org.bytemechanics.logger.internal.commons.lang

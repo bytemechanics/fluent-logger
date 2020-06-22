@@ -360,7 +360,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -396,7 +395,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -432,7 +430,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -468,7 +465,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -504,7 +500,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -540,7 +535,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */
@@ -576,7 +570,6 @@ public final class FluentLogger {
     }
 	/**
 	 * Log the given _exception to a finest level
-	 * @param _exception exception to log
 	 * @param _messageSupplier log message supplier
 	 * @return this logger
 	 */

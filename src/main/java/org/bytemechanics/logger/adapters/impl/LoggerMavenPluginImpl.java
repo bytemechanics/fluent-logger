@@ -22,6 +22,7 @@ import org.bytemechanics.logger.adapters.LoggerAdapter;
 /**
  * Maven plugin log adapter
  * @author afarre
+ * @since 2.2.0
  */
 public class LoggerMavenPluginImpl implements LoggerAdapter{
 
@@ -29,11 +30,22 @@ public class LoggerMavenPluginImpl implements LoggerAdapter{
 	private final org.apache.maven.plugin.logging.Log underlayingLog;
 	
 	
+	/**
+	 * Constructor receives name and the underlaying logger
+	 * @param _name logger name
+	 * @param _log underlaying logger
+	 * @see org.apache.maven.plugin.logging.Log
+	 */
 	public LoggerMavenPluginImpl(final String _name,final org.apache.maven.plugin.logging.Log _log){
 		this.name=_name;
 		this.underlayingLog=_log;
 	}
 
+	/**
+	 * Returns the underlaying logger used by this adapter
+	 * @return underlaying logger
+	 * @see org.apache.maven.plugin.logging.Log
+	 */
 	public org.apache.maven.plugin.logging.Log getUnderlayingLog() {
 		return underlayingLog;
 	}
