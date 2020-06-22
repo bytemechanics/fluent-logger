@@ -59,37 +59,50 @@ public final class FluentLogger {
         this.args = _args;
     }
 
+	private static String getClassNameOrDefault(final String _factoryClassName){
+		return Optional.ofNullable(_factoryClassName)
+						.map(String::trim)
+						.filter(className -> !className.isEmpty())
+						.orElse(LoggerFactoryReflectionImpl.class.getName());
+				
+	}
+	private static boolean isNotCurrentFactory(final String _factoryClassName){
+		return !loggerFactory.getClass().getName().equals(_factoryClassName);
+				
+	}
+	@SuppressWarnings("unchecked")
+	private static void replaceFactory(final String _factoryClassName){
+		synchronized(FluentLogger.class){
+			if(!loggerFactory.getClass().getName().equals(_factoryClassName)){
+				final Class factoryClazzCandidate;
+				try {
+					factoryClazzCandidate = Class.forName(_factoryClassName);
+					loggerFactory=((Class<LoggerFactoryAdapter>)factoryClazzCandidate).newInstance();
+				} catch (ClassCastException e) {
+					System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} does not implement LoggerFactoryAdapter. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,_factoryClassName,e.getMessage()));
+				} catch (ClassNotFoundException e) {
+					System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} does not exist. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,_factoryClassName,e.getMessage()));
+				} catch (InstantiationException e) {
+					System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} can not be instantiated or does not have default constructor. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,_factoryClassName,e.getMessage()));
+				} catch (IllegalAccessException e) {
+					System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} has non public default contructor. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,_factoryClassName,e.getMessage()));
+				}
+			}
+		}
+	}
 		
 	/**
 	 * Get the current LoggerFactoryAdapter instance
 	 * @return the default LoggerFactoryAdapter instance or the configured as system property buy LOGGER_FACTORY_ADAPTER_KEY
 	 * @see FluentLogger#LOGGER_FACTORY_ADAPTER_KEY
 	 */
-	@SuppressWarnings("unchecked")
 	protected static LoggerFactoryAdapter getLoggerFactory(){
 
 		Optional.ofNullable(LOGGER_FACTORY_ADAPTER_KEY)
 				.map(System::getProperty)
-				.filter(className -> !loggerFactory.getClass().getName().equals(className))
-				.ifPresent(className -> {
-					synchronized(FluentLogger.class){
-						if(!loggerFactory.getClass().getName().equals(className)){
-							final Class factoryClazzCandidate;
-							try {
-								factoryClazzCandidate = Class.forName(className);
-								loggerFactory=((Class<LoggerFactoryAdapter>)factoryClazzCandidate).newInstance();
-							} catch (ClassCastException e) {
-								System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} does not implement LoggerFactoryAdapter. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,className,e.getMessage()));
-							} catch (ClassNotFoundException e) {
-								System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} does not exist. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,className,e.getMessage()));
-							} catch (InstantiationException e) {
-								System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} can not be instantiated or does not have default constructor. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,className,e.getMessage()));
-							} catch (IllegalAccessException e) {
-								System.err.println(SimpleFormat.format("WARNING: Configured logger factory propery {} class {} has non public default contructor. Error message: {}\n\tTo remove this message please remove this attribute from system properties or configure a correct class",LOGGER_FACTORY_ADAPTER_KEY,className,e.getMessage()));
-							}
-						}
-					}
-				});
+				.map(FluentLogger::getClassNameOrDefault)
+				.filter(FluentLogger::isNotCurrentFactory)
+				.ifPresent(FluentLogger::replaceFactory);
 
 		return loggerFactory;
 	}

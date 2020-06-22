@@ -25,12 +25,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
-import org.bytemechanics.logger.adapters.LoggerAdapter;
+import org.bytemechanics.logger.beans.LogBean;
 import org.bytemechanics.logger.factory.LoggerFactoryAdapter;
 import org.bytemechanics.logger.internal.factory.impl.LoggerFactoryReflectionImpl;
 import org.bytemechanics.logger.internal.factory.utils.LoggerReflectionUtils;
-import org.bytemechanics.logger.beans.LogBean;
-import org.bytemechanics.logger.beans.LogBean;
 
 /**
  * Log message interface
@@ -40,8 +38,9 @@ import org.bytemechanics.logger.beans.LogBean;
 public interface Log {
 	
 	public static final String UNKNOWN_STACKTRACE = "unknown";
-	public static final Set<String> SKIPPED_CLASS_NAMES = Stream.of(Thread.class.getName(),LogBean.class.getName(),FluentLogger.class.getName(),LoggerFactoryAdapter.class.getName(),LoggerFactoryReflectionImpl.class.getName(),LoggerReflectionUtils.class.getName(),LoggerAdapter.class.getName(),Log.class.getName())
-																	.collect(Collectors.toSet());
+	public static final Set<String> SKIPPED_CLASS_NAMES = Collections.unmodifiableSet(
+																	Stream.of(Thread.class.getName(),LogBean.class.getName(),FluentLogger.class.getName(),LoggerFactoryAdapter.class.getName(),LoggerFactoryReflectionImpl.class.getName(),LoggerReflectionUtils.class.getName(),LoggerAdapter.class.getName(),Log.class.getName())
+																				.collect(Collectors.toSet()));
 
 	/**
 	 * Return the log level
