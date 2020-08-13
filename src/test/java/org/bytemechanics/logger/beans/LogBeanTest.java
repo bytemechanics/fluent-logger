@@ -87,11 +87,11 @@ public class LogBeanTest {
 							.args(null)
 							.time(time);
 		Assertions.assertEquals(_level,bean.getLevel());
-		Assertions.assertEquals("myMessage null    ",bean.getMessage().get());
+		Assertions.assertEquals("myMessage null null null null",bean.getMessage().get());
 		Assertions.assertEquals(time,bean.getTime());
 		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
-		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
-		Assertions.assertEquals(throwable,bean.getThrowable().get());
+		Assertions.assertEquals("testBuilder_null_arg",bean.getSource().getMethodName());
+		Assertions.assertEquals(Optional.empty(),bean.getThrowable());
 	}
 	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown"})
 	@ParameterizedTest(name ="LogBean builder from level={0} should not have problems with null args")
@@ -105,11 +105,11 @@ public class LogBeanTest {
 							.args((Object[])null)
 							.time(time);
 		Assertions.assertEquals(_level,bean.getLevel());
-		Assertions.assertEquals("myMessage null    ",bean.getMessage().get());
+		Assertions.assertEquals("myMessage null null null null",bean.getMessage().get());
 		Assertions.assertEquals(time,bean.getTime());
 		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
-		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
-		Assertions.assertEquals(throwable,bean.getThrowable().get());
+		Assertions.assertEquals("testBuilder_null_args",bean.getSource().getMethodName());
+		Assertions.assertEquals(Optional.empty(),bean.getThrowable());
 	}
 	
 	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown", "AssertEqualsBetweenInconvertibleTypes"})

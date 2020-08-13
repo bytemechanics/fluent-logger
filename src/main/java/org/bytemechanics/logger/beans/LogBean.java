@@ -68,8 +68,10 @@ public class LogBean implements Log{
 	 * @return this logBean
 	 */
 	public LogBean args(final Object... _args) {
-		this.args.add(_args);
-		return this;
+		this.args.add(Optional.ofNullable(_args)
+						  .orElse(new Object[]{null}));
+
+		  return this;
 	}
 	/**
 	 * Replaces current log time with the given one
@@ -96,10 +98,10 @@ public class LogBean implements Log{
 	@Override
 	public Supplier<String> getMessage() {
 		return () -> SimpleFormat.format(this.message.stream()
-														.collect(Collectors.joining())
-										,this.args.stream()
-													.reduce(ArrayUtils::concat)
-													.orElse(new Object[0]));
+											 .collect(Collectors.joining())
+								  ,this.args.stream()
+											 .reduce(ArrayUtils::concat)
+											 .orElse(new Object[0]));
 	}
 
 	/** @see Log#getThrowable() */
