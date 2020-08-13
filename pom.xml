@@ -4,11 +4,11 @@
     <parent>
         <groupId>org.bytemechanics</groupId>
         <artifactId>bytemechanics-maven</artifactId>
-        <version>2.2.0</version>
+        <version>2.2.1</version>
     </parent>
     <artifactId>fluent-logger</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.0</version>
+    <version>2.2.2</version>
     <name>Fluent Logger</name>
     <description>Simple logging abstraction with standard java logging system</description>
     <url>https://fluent-logger.bytemechanics.org</url>

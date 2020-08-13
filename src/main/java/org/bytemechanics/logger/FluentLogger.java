@@ -252,8 +252,8 @@ public final class FluentLogger {
 
 		if(this.loggerAdapter.isEnabled(_level)){
 			this.loggerAdapter.log(LogBean.of(_level)
-											.message(getPrefix()).args(getArgs())
-											.message(_message).args(_args));
+									   .message(getPrefix()).args(getArgs())
+									   .message(_message).args(_args));
 		}
 		return this;
     }
@@ -268,8 +268,8 @@ public final class FluentLogger {
 
 		if(this.loggerAdapter.isEnabled(_level)){
 			this.loggerAdapter.log(LogSupplierBean.of(_level,
-																() -> (SimpleFormat.format(getPrefix(), getArgs())+_messageSupplier.get()),
-																_exception));
+												() -> (SimpleFormat.format(getPrefix(), getArgs())+_messageSupplier.get()),
+												_exception));
 		}
 		return this;
     }
