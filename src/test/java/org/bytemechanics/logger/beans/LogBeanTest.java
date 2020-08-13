@@ -74,6 +74,43 @@ public class LogBeanTest {
 		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
 		Assertions.assertEquals(throwable,bean.getThrowable().get());
 	}
+
+	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown"})
+	@ParameterizedTest(name ="LogBean builder from level={0} should not have problems with null arg")
+	@EnumSource(Level.class)
+	public void testBuilder_null_arg(final Level _level){
+		
+		final IOException throwable=new IOException("MyIOException");
+		final LocalDateTime time=LocalDateTime.now();
+		Log bean=LogBean.of(_level)
+							.message("myMessage {} {} {} {}")
+							.args(null)
+							.time(time);
+		Assertions.assertEquals(_level,bean.getLevel());
+		Assertions.assertEquals("myMessage null    ",bean.getMessage().get());
+		Assertions.assertEquals(time,bean.getTime());
+		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
+		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
+		Assertions.assertEquals(throwable,bean.getThrowable().get());
+	}
+	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown"})
+	@ParameterizedTest(name ="LogBean builder from level={0} should not have problems with null args")
+	@EnumSource(Level.class)
+	public void testBuilder_null_args(final Level _level){
+		
+		final IOException throwable=new IOException("MyIOException");
+		final LocalDateTime time=LocalDateTime.now();
+		Log bean=LogBean.of(_level)
+							.message("myMessage {} {} {} {}")
+							.args((Object[])null)
+							.time(time);
+		Assertions.assertEquals(_level,bean.getLevel());
+		Assertions.assertEquals("myMessage null    ",bean.getMessage().get());
+		Assertions.assertEquals(time,bean.getTime());
+		Assertions.assertEquals("org.bytemechanics.logger.beans.LogBeanTest",bean.getSource().getClassName());
+		Assertions.assertEquals("testBuilder",bean.getSource().getMethodName());
+		Assertions.assertEquals(throwable,bean.getThrowable().get());
+	}
 	
 	@SuppressWarnings({"ThrowableInstanceNotThrown", "ThrowableInstanceNeverThrown", "AssertEqualsBetweenInconvertibleTypes"})
 	@ParameterizedTest(name ="LogBean builder from level={0}")
