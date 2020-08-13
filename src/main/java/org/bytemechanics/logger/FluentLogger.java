@@ -273,6 +273,22 @@ public final class FluentLogger {
 		}
 		return this;
     }
+	/**
+	 * Allows send the given _messageSupplier and the _exception to the underlying logger API
+	 * @param _level log level
+	 * @param _messageSupplier log message supplier
+	 * @param _exception log throwable attachment
+	 * @return same FluentLogger instance
+	 */
+	public FluentLogger log(final Level _level,final Supplier<String> _messageSupplier, final Throwable _exception) {
+
+		if(this.loggerAdapter.isEnabled(_level)){
+			this.loggerAdapter.log(LogSupplierBean.of(_level,
+																() -> (SimpleFormat.format(getPrefix(), getArgs())+_messageSupplier.get()),
+																_exception));
+		}
+		return this;
+    }
 
 	/**
 	 * Returns the logger name
