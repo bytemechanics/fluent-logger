@@ -19,8 +19,10 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
+import org.apache.logging.log4j.util.MessageSupplier;
 import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.adapters.Log;
 import org.bytemechanics.logger.adapters.LoggerAdapter;
@@ -56,6 +58,7 @@ public class LoggerLog4j2Extension extends ExtendedLoggerWrapper implements Logg
 	@Override
 	public void log(final Log _log) {
 		final Level level=translateLevel(_log.getLevel());
-		logIfEnabled(FluentLogger.class.getName(),level,null,_log.getMessage(),_log.getThrowable().orElse(null));
+                final MessageSupplier messageSupplier=() -> new SimpleMessage(_log.getMessage().get());
+		logIfEnabled(FluentLogger.class.getName(),level,null,messageSupplier,_log.getThrowable().orElse(null));
 	}
 }

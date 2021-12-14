@@ -1,99 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.bytemechanics</groupId>
-        <artifactId>bytemechanics-maven</artifactId>
-        <version>2.2.1</version>
-    </parent>
-    <artifactId>fluent-logger</artifactId>
-    <packaging>jar</packaging>
-    <version>2.2.2</version>
-    <name>Fluent Logger</name>
-    <description>Simple logging abstraction with standard java logging system</description>
-    <url>https://fluent-logger.bytemechanics.org</url>
-    <organization>
-        <name>Byte Mechanics</name>
-        <url>http://www.bytemechanics.org</url>
-    </organization>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bytemechanics</groupId>
+		<artifactId>bytemechanics-maven</artifactId>
+		<version>2.2.1</version>
+	</parent>
+	<artifactId>fluent-logger</artifactId>
+	<packaging>jar</packaging>
+	<version>2.2.3</version>
+	<name>Fluent Logger</name>
+	<description>Simple logging abstraction with standard java logging system</description>
+	<url>https://fluent-logger.bytemechanics.org</url>
+	<organization>
+		<name>Byte Mechanics</name>
+		<url>http://www.bytemechanics.org</url>
+	</organization>
     
-    <developers>
-        <developer>
-            <name>Albert Farré Figueras</name>
-            <email>afarre@gmail.com</email>
-            <url>https://www.linkedin.com/in/albert-farré-figueras-4348aa2</url>
-            <roles>
-                <role>Developer</role>
-                <role>Product owner</role>
-            </roles>
-            <timezone>GMT+1</timezone>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<name>Albert Farré Figueras</name>
+			<email>afarre@gmail.com</email>
+			<url>https://www.linkedin.com/in/albert-farré-figueras-4348aa2</url>
+			<roles>
+				<role>Developer</role>
+				<role>Product owner</role>
+			</roles>
+			<timezone>GMT+1</timezone>
+		</developer>
+	</developers>
     
-    <licenses>
-        <license>
-            <name>Apache License 2.0</name>
-            <url>http://opensource.org/licenses/Apache-2.0</url>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>http://opensource.org/licenses/Apache-2.0</url>
+		</license>
+	</licenses>
     
-    <scm>
-        <connection>https://github.com/bytemechanics/fluent-logger.git</connection>
-        <url>https://github.com/bytemechanics/fluent-logger</url>
-    </scm>
+	<scm>
+		<connection>https://github.com/bytemechanics/fluent-logger.git</connection>
+		<url>https://github.com/bytemechanics/fluent-logger</url>
+	</scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>provided</scope>
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<scope>provided</scope>
 			<optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.12.0</version>
-            <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.16.0</version>
+			<scope>provided</scope>
 			<optional>true</optional>
-        </dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.16.0</version>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
 			<version>3.6.3</version>
-            <scope>provided</scope>
+			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.bytemechanics.maven</groupId>
-                <artifactId>copysource-maven-plugin</artifactId>
-                <version>1.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>copy-classes</goal>
-                        </goals>
-                        <configuration>
-                            <copies>
-                                <copy>
-                                    <artifact>${project.groupId}:copy-commons:1.5.1</artifact>
-                                    <classes>
-                                        <class>org.bytemechanics.commons.string.SimpleFormat</class>
-                                        <class>org.bytemechanics.commons.lang.ArrayUtils</class>
-                                        <class>org.bytemechanics.commons.functional.LambdaUnchecker</class>
-                                    </classes>
-                                    <fromPackage>org.bytemechanics.commons</fromPackage>
-                                    <toPackage>org.bytemechanics.logger.internal.commons</toPackage>
-                                </copy>
-                            </copies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.bytemechanics.maven</groupId>
+				<artifactId>copysource-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>copy-classes</goal>
+						</goals>
+						<configuration>
+							<copies>
+								<copy>
+									<artifact>${project.groupId}:copy-commons:1.5.1</artifact>
+									<classes>
+										<class>org.bytemechanics.commons.string.SimpleFormat</class>
+										<class>org.bytemechanics.commons.lang.ArrayUtils</class>
+										<class>org.bytemechanics.commons.functional.LambdaUnchecker</class>
+									</classes>
+									<fromPackage>org.bytemechanics.commons</fromPackage>
+									<toPackage>org.bytemechanics.logger.internal.commons</toPackage>
+								</copy>
+							</copies>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -121,5 +128,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-    </build>
+	</build>
 </project>
