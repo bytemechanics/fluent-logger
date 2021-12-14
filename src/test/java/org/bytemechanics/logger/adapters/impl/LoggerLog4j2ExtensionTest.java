@@ -18,7 +18,6 @@ package org.bytemechanics.logger.adapters.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.function.Supplier;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -27,6 +26,8 @@ import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.util.MessageSupplier;
 import org.bytemechanics.logger.FluentLogger;
 import org.bytemechanics.logger.Level;
 import org.bytemechanics.logger.beans.LogBean;
@@ -131,10 +132,9 @@ public class LoggerLog4j2ExtensionTest {
 	@MethodSource("logDatapack")
 	@SuppressWarnings("unchecked")
 	public void testLog(final LogBean _log){
-
 		final org.apache.logging.log4j.Level translatedLevel=logger.translateLevel(_log.getLevel());
 		new Expectations() {{
-			logger.logIfEnabled(FluentLogger.class.getName(),translatedLevel,null,(Supplier<String>)any,_log.getThrowable().orElse(null)); 
+			logger.logIfEnabled(FluentLogger.class.getName(),(org.apache.logging.log4j.Level)translatedLevel,(Marker)null,(MessageSupplier)any,(Throwable)_log.getThrowable().orElse(null)); 
 				times=1;
 		}};
 		logger.log(_log);

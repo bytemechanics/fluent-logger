@@ -15,7 +15,6 @@
  */
 package org.bytemechanics.logger.beans;
 
-import org.bytemechanics.logger.adapters.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -26,6 +25,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bytemechanics.logger.Level;
+import org.bytemechanics.logger.adapters.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,7 +84,7 @@ public class LogBeanTest {
 		final LocalDateTime time=LocalDateTime.now();
 		Log bean=LogBean.of(_level)
 							.message("myMessage {} {} {} {}")
-							.args(null)
+							.args((Object[])null)
 							.time(time);
 		Assertions.assertEquals(_level,bean.getLevel());
 		Assertions.assertEquals("myMessage null null null null",bean.getMessage().get());

@@ -1,3 +1,16 @@
+# Version 2.2.3
+---
+Fixed log4j2 extension adapter implementation causing log lambda conversion to string instead recovering message
+
+## Changes
+* upgrade: Upgraded log4j2 to 2.16.0 in order to be protected against log4jshell vulnerablitity
+
+
+# Version 2.2.2
+---
+Fixed problems with null args
+
+
 # Version 2.2.0
 ---
 Utility minor enhancements to optimize CPU consumption on log generation
