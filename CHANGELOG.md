@@ -1,3 +1,12 @@
+# Version 2.2.4
+---
+Fixed log4j2 extension adapter implementation causing log lambda conversion to string instead recovering message
+
+## Changes
+* upgrade: Upgraded log4j2 to 2.17.0 in order to be protected against log4jshell vulnerablitity CVE-2021-45105
+* Add: Security policy page
+
+
 # Version 2.2.3
 ---
 Fixed log4j2 extension adapter implementation causing log lambda conversion to string instead recovering message
